@@ -1337,3 +1337,4 @@ int styleable ViewStubCompat_android_id 0
 int styleable ViewStubCompat_android_inflatedId 2
 int styleable ViewStubCompat_android_layout 1
 int xml preferences 0x7f060000
+int xml rnfilesystem_backup_rules 0x7f060001

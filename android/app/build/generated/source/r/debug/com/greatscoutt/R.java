@@ -2350,6 +2350,7 @@ containing a value of this type.
     }
     public static final class xml {
         public static final int preferences=0x7f060000;
+        public static final int rnfilesystem_backup_rules=0x7f060001;
     }
     public static final class styleable {
         /** Attributes that can be used with a ActionBar.

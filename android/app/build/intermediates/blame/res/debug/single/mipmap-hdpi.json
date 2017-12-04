@@ -1,5 +1,9 @@
 [
     {
+        "merged": "/Users/jschool/code/random/great-scoutt/android/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher.png",
+        "source": "/Users/jschool/code/random/great-scoutt/android/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
         "merged": "/Users/jschool/code/random/ftc/GreatScoutt/android/app/build/intermediates/res/merged/debug/mipmap-hdpi/ic_launcher.png",
         "source": "/Users/jschool/code/random/ftc/GreatScoutt/android/app/src/main/res/mipmap-hdpi/ic_launcher.png"
     }

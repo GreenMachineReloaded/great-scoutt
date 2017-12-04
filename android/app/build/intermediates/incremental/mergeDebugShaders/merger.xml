@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/jschool/code/random/ftc/GreatScoutt/android/app/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/jschool/code/random/ftc/GreatScoutt/android/app/src/debug/shaders"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/jschool/code/random/great-scoutt/android/app/src/main/shaders"/></dataSet><dataSet config="debug"><source path="/Users/jschool/code/random/great-scoutt/android/app/src/debug/shaders"/></dataSet></merger>

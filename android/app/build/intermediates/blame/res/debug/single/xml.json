@@ -2,5 +2,13 @@
     {
         "merged": "/Users/jschool/code/random/ftc/GreatScoutt/android/app/build/intermediates/res/merged/debug/xml/preferences.xml",
         "source": "/Users/jschool/code/random/ftc/GreatScoutt/android/app/build/intermediates/exploded-aar/com.facebook.react/react-native/0.50.4/res/xml/preferences.xml"
+    },
+    {
+        "merged": "/Users/jschool/code/random/great-scoutt/android/app/build/intermediates/res/merged/debug/xml/preferences.xml",
+        "source": "/Users/jschool/code/random/great-scoutt/android/app/build/intermediates/exploded-aar/com.facebook.react/react-native/0.50.4/res/xml/preferences.xml"
+    },
+    {
+        "merged": "/Users/jschool/code/random/great-scoutt/android/app/build/intermediates/res/merged/debug/xml/rnfilesystem_backup_rules.xml",
+        "source": "/Users/jschool/code/random/great-scoutt/android/app/build/intermediates/exploded-aar/GreatScoutt/react-native-filesystem-v1/unspecified/res/xml/rnfilesystem_backup_rules.xml"
     }
 ]

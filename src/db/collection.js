@@ -1,4 +1,4 @@
-import FileSystem from 'react-native-filesystem';
+import FileSystem from 'react-native-filesystem-v1';
 
 // TODO: this implements an interface for a real database client, but it just
 // interacts with JSON right now. Replace this with a real DB at some point
