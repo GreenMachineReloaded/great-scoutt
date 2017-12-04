@@ -1,8 +1,4 @@
 {
-  "expo": {
-    "sdkVersion": "22.0.0",
-    "android": {
-      "package": "com.greenmachinereloaded.greatscoutt"
-    }
-  }
+  "name": "GreatScoutt",
+  "displayName": "GreatScoutt"
 }

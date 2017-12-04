@@ -1,35 +1,24 @@
 {
-  "name": "great-scoutt",
-  "version": "0.1.0",
+  "name": "GreatScoutt",
+  "version": "0.0.1",
   "private": true,
-  "devDependencies": {
-    "jest-expo": "^22.0.0",
-    "mocha": "4.0.1",
-    "mocha-react-native": "0.6.0",
-    "react-native-scripts": "1.7.0",
-    "react-test-renderer": "16.0.0-beta.5",
-    "sinon": "4.1.2",
-    "tap": "10.7.3"
-  },
-  "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
-    "start": "react-native-scripts start",
-    "eject": "react-native-scripts eject",
-    "android": "react-native-scripts android",
-    "ios": "react-native-scripts ios",
-    "test:services": "NODE_ENV=test && node node_modules/.bin/mocha --compilers js:babel-core/register services/tests/*.test.js",
-    "watchman": "node node_modules/.bin/watchman"
-  },
-  "jest": {
-    "preset": "jest-expo"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
   },
   "dependencies": {
-    "expo": "22.0.3",
-    "react": "16.0.0-beta.5",
-    "react-native": "0.49.5",
-    "react-native-fs": "2.8.5",
-    "react-native-simple-stepper": "1.18.0",
-    "react-navigation": "1.0.0-beta.19",
-    "watchman": "0.1.8"
+    "react": "16.0.0",
+    "react-native": "0.50.4",
+    "react-native-filesystem": "0.1.0",
+    "react-navigation": "1.0.0-beta.21"
+  },
+  "devDependencies": {
+    "babel-jest": "21.2.0",
+    "babel-preset-react-native": "4.0.0",
+    "jest": "21.2.1",
+    "react-test-renderer": "16.0.0"
+  },
+  "jest": {
+    "preset": "react-native"
   }
 }

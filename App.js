@@ -1,9 +1,20 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Router from './ui/router.js';
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
 
-export default class App extends React.Component {
+import React, { Component } from 'react';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  View
+} from 'react-native';
+import Router from './src/ui/router';
+
+export default class App extends Component {
   render() {
-    return <Router/>;
+    return <Router/>
   }
 }
