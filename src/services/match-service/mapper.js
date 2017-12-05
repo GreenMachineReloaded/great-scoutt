@@ -6,9 +6,9 @@ const gameConfig = require('../../data/game-config');
 const tourneyService = new TournamentService();
 const teamService = new TeamService();
 
-function getTeamsByIds(teams) {
-  return Promise.all(teams.map((id) => {
-    return teamService.get({ id })
+function getTeams(teams) {
+  return Promise.all(teams.map((number) => {
+    return teamService.get({ number })
       .then(([firstResult]) => firstResult);
   }));
 }
@@ -20,9 +20,9 @@ function getTeamsByIds(teams) {
 export function matchMapper (match) {
   return Promise.all([
     tourneyService.get({ id: match.tournament }),
-    getTeamsByIds(match.allies),
-    getTeamsByIds(match.opponents),
-    getTeamsByIds([match.team])
+    getTeams(match.allies),
+    getTeams(match.opponents),
+    getTeams([match.team])
   ])
   .then(([[tournament], allies, opponents, [self]]) => {
     return {

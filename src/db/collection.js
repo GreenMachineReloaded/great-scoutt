@@ -21,9 +21,16 @@ function Collection (path='', initData=null, autoSave=false) {
 Collection.prototype.getData = function () {
   if (!this.data) {
     console.log(`Reading from ${this.path}`);
-    return FileSystem.readFile(this.path)
-      .then(JSON.parse)
-      .then((data) => this.data = data)
+    return FileSystem.readFile(this.path, FileSystem.storage.extBackedUp)
+      .then((rawText) => {
+        try {
+          this.data = JSON.parse(rawText);
+        } catch (e) {
+          throw new Error('failed parsing json file: ' + this.path)
+        }
+        
+        return this.data || [];
+      })
       .catch((error) => {
         console.log(error);
         return this.save().then(() => Promise.resolve(this.data));
@@ -132,7 +139,7 @@ Collection.prototype.save = function () {
     this.data = dataToWrite;
   }
 
-  return FileSystem.writeToFile(this.path, JSON.stringify(dataToWrite, null, '  '));
+  return FileSystem.writeToFile(this.path, JSON.stringify(dataToWrite), false, FileSystem.storage.extBackedUp);
 };
 
 export default Collection;

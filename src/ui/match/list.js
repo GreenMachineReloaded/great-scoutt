@@ -70,8 +70,9 @@ export default class MatchList extends Component {
   }
 
   refresh () {
-    matchService.get({ team: this.props.team.id })
+    matchService.get({ team: this.props.team.number })
       .then((matches) => {
+
         let lastTId;
         this.setState({
           renderedMatchList: matches.reduce((accum, match) => {
