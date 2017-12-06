@@ -33,22 +33,6 @@ export default class MatchAdd extends Component {
       tournamentOptions: [],
       commentsHeight: 40
     };
-
-    this.state.allies = [{
-      number: 0
-    }];
-
-    const oppoTeamPlaceholder = {
-      number: 0
-    };
-
-    this.state.opponents = [oppoTeamPlaceholder, oppoTeamPlaceholder];
-  }
-
-  componentDidMount () {
-    tourneyService.getAll().then((tournaments) =>
-      this.setState({ tournamentOptions: tournaments })
-    );
   }
 
   /**
@@ -159,58 +143,6 @@ export default class MatchAdd extends Component {
       </View>
     );
 
-    // TODO: Break these components into another file (TeamNumberField.js)
-    const renderedAllies = this.state.allies.map((ally, i) => (
-      <View style={{ height: 50, alignItems: 'center', flexDirection: 'row' }} key={i}>
-        <Text style={{ flex: 1 }}>{'Ally'}</Text>
-        <TextInput
-          keyboardType={'numeric'}
-          value={`${ally.number || ''}`}
-          style={{ flex: 5 }}
-          placeholder={'Please enter ally team #'}
-          onChangeText={(value) => {
-
-            // FIXME: does not validate decimal points
-            if (!isNaN(value) && value > 0) {
-              const newAllies = this.state.allies;
-              newAllies[0] = {
-                number: value
-              };
-
-              this.setState({
-                allies: newAllies
-              });
-            }
-          }}
-        />
-      </View>
-    ));
-
-    const renderedOpponents = this.state.opponents.map((oppo, i) => (
-      <View style={{ height: 50, alignItems: 'center', flexDirection: 'row' }} key={i}>
-        <Text style={{ flex: 1 }}>{`Opponent ${i + 1}`}</Text>
-        <TextInput
-          keyboardType={'numeric'}
-          value={`${oppo.number || ''}`}
-          style={{ flex: 5 }}
-          placeholder={'Please enter an opponent team number...'}
-          onChangeText={(value) => {
-
-            // FIXME: Does not validate decimal points
-            if (!isNaN(value) && value > 0) {
-              const newOpponents = this.state.opponents;
-              newOpponents[i] = {
-                number: value
-              };
-              this.setState({
-                opponents: newOpponents
-              });
-            }
-          }}
-        />
-      </View>
-    ));
-
     const winToggle = (
       <View style={{ flexDirection: 'row' }}>
         <Text style={{ flex: 5 }}>{'Win?'}</Text>
@@ -248,9 +180,8 @@ export default class MatchAdd extends Component {
     return (
       <ScrollView style={{flex: 1, flexDirection: 'column'}}>
         {tournamentDropdown}
+        {allyDropdown}
         {matchNumField}
-        {renderedAllies}
-        {renderedOpponents}
         {winToggle}
         {commentsField}
         {categories}
