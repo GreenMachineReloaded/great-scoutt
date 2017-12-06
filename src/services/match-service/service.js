@@ -18,8 +18,6 @@ MatchService.prototype.get = function (params) {
 
 // TODO: consider reworking this horrible CRUD system
 MatchService.prototype.create = function (match) {
-
-  // when creating a new tournament, tournament = tournament.id
   return this.matches.add(Object.assign(match, { matchId: `${match.tournament}-${match.number}` }));
 };
 
