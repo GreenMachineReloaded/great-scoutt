@@ -108,21 +108,16 @@ export default class MatchAdd extends Component {
   }
 
   saveMatch () {
-    const teamPromises = this.state.opponents.concat(this.state.allies)
-      .map((team) => teamService.getByNumber(team.number));
+    const matchToSave = this.state;
+    
+    matchToSave.tournamentOptions = undefined;
 
-    Promise.all(teamPromises)
-      .then(([oppo1, oppo2, ally]) => {
-        const matchToSave = this.state;
+    matchToSave.team = this.props.navigation.state.params.team.number;
+    matchToSave.opponents = this.state.opponents.map(op => op.number);
+    matchToSave.allies = this.state.allies.map(ally => ally.number);
 
-        matchToSave.tournamentOptions = undefined;
-
-        matchToSave.team = this.props.navigation.state.params.team.id;
-        matchToSave.opponents = [oppo1.id, oppo2.id];
-        matchToSave.allies = [ally.id];
-
-        return matchService.create(matchToSave);
-      }).then(() => {
+    return matchService.create(matchToSave)
+      .then(() => {
         this.props.navigation.state.params.refresh();
         this.props.navigation.goBack();
       });

@@ -77,7 +77,7 @@ export default class MatchList extends Component {
         this.setState({
           renderedMatchList: matches.reduce((accum, match) => {
             const renderedMatch = <Match
-                                    key={match.matchId}
+                                    key={match.id}
                                     match={match}
                                     detailClicked={() => this.props.navigation.navigate('MatchDetailScreen', match)}
                                     editClicked={() => this.props.navigation.navigate('MatchEditScreen', match)}/>;
