@@ -20,11 +20,9 @@ function getTeams(teams) {
 export function matchMapper (match) {
   return Promise.all([
     tourneyService.get({ id: match.tournament }),
-    getTeams(match.allies),
-    getTeams(match.opponents),
     getTeams([match.team])
   ])
-  .then(([[tournament], allies, opponents, [self]]) => {
+  .then(([[tournament], [self]]) => {
     return {
       id: match.id,
       team: self,
@@ -34,8 +32,6 @@ export function matchMapper (match) {
       // TODO: rename to code
       matchId: match.matchId,
       win: match.win,
-      allies: allies,
-      opponents: opponents,
       comments: match.comments,
       data: {
         categories: match.data.categories.map((category) => {
@@ -64,8 +60,6 @@ export function getEmptyMatch (team) {
     number: 0,
     matchId: '',
     win: false,
-    allies: [],
-    opponents: [],
     comments: '',
     data: {
       categories: gameConfig.categories.map((category) => {

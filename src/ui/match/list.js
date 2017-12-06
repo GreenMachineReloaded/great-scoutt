@@ -4,7 +4,8 @@ import {
   FlatList,
   View,
   Button,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native';
 import TournamentService from '../../services/tournament-service';
 import TeamService from '../../services/team-service';
@@ -41,13 +42,10 @@ function Match ({ match, detailClicked, editClicked }) {
     flexDirection: 'row'
   };
 
-  const allyName = match.allies[0].name;
-  const opponentNames = match.opponents.map(oppo => oppo.name);
-
   return (
     <View style={style}>
       <TouchableOpacity style={{ flex: 1, justifyContent: 'center', flexDirection: 'row', marginLeft: 10 }} onPress={() => detailClicked()}>
-        <Text style={{ flex: 1, textAlign: 'left' }}>{`Match ${match.number} - ${match.team.name} & ${allyName} vs ${opponentNames[0]} & ${opponentNames[1]}`}</Text>
+        <Text style={{ flex: 1, textAlign: 'left' }}>{`Match ${match.number}`}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={{ height: 45, alignItems: 'center', justifyContent: 'center' }} onPress={() => editClicked()}>
         <Text style={{ paddingLeft: 10, paddingRight: 10, textAlign: 'center', color: 'white', fontSize: 36, backgroundColor: '#4286f4' }}>{'✏'}</Text>
@@ -92,7 +90,8 @@ export default class MatchList extends Component {
             return accum.concat(renderedMatch);
           }, [])
         });
-      });
+      })
+      .catch((error) => Alert.alert(error.message));
   }
 
   render () {

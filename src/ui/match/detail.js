@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 
+import MatchService from '../../services/match-service';
+
+const matchService = new MatchService();
+
 function getMatchTitle (match) {
-  return `Match ${match.number} - ${match.team.name} & ${match.allies[0].name} vs ${match.opponents[0].name} & ${match.opponents[0].name}`;
+  return `${match.team.name} #${match.number}`;
 }
 
 function getTotalScore ({ data: { categories } }) {
@@ -18,7 +22,7 @@ export default class MatchDetail extends Component {
     title: getMatchTitle(navigation.state.params)
   });
 
-  render() {
+  render () {
     const match = this.props.navigation.state.params;
     return (
       <View style={{ marginLeft: 10, marginRight: 10 }}>
