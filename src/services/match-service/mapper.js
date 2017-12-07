@@ -17,7 +17,7 @@ function getTeams(teams) {
  * This function grabs information from other services to provide a more
  * complete match result, and also merges in rule metadata data from gameConfig
  */
-export function matchMapper (match) {
+export function format (match) {
   return Promise.all([
     tourneyService.get({ id: match.tournament }),
     getTeams([match.team])
@@ -31,7 +31,13 @@ export function matchMapper (match) {
 
       // TODO: rename to code
       matchId: match.matchId,
+
       win: match.win,
+
+      // need to ensure that 'RED' and 'BLUE' are the only two allowable options.
+      // if for some reason we have a different value, record it as 'UNKNOWN'
+      alliance: match.alliance,
+
       comments: match.comments,
       data: {
         categories: match.data.categories.map((category) => {
@@ -53,13 +59,14 @@ export function matchMapper (match) {
 }
 
 // TODO: create a canonical model structure
-export function getEmptyMatch (team) {
+export function empty (team) {
   return {
     team: team,
     tournament: 0,
     number: 0,
     matchId: '',
     win: false,
+    alliance: 'RED',
     comments: '',
     data: {
       categories: gameConfig.categories.map((category) => {

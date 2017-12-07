@@ -3,9 +3,9 @@ import Collection from './collection';
 let instance;
 
 /**
- * Exports an object with fields representing the domain objects. Essentially,
- * these are collections that are wrapped with logic placing restrurictions on
- * certain destructive actions like deletion
+ * Exports an object with fields representing the domain objects.
+ * Think of this file sort of as a subsitute for setting up
+ * database contraints
  */
 function Client () {
   if (!instance) {
@@ -74,7 +74,20 @@ function setupMatchCollection (collection, teamCollection) {
     getById: collection.getById.bind(collection),
     find: collection.find.bind(collection),
     filter: collection.filter.bind(collection),
-    add: collection.add.bind(collection),
+
+    add: ((match) => {
+      if (match.number < 1) {
+        return Promise.reject({
+          name: 'DbSchemaError',
+          message: 'Match number must be greater than 1.'
+        });
+      } else {
+        return collection.add(Object.assign(match, { matchId: `${match.tournament}-${match.number}` }));
+      }
+
+      
+    }).bind(collection),
+
     update: collection.update.bind(collection),
     remove: collection.remove.bind(collection),
     clear: collection.clear.bind(collection),

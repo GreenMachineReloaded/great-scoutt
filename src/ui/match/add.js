@@ -6,7 +6,9 @@ import {
   Switch,
   TextInput,
   Button,
-  Picker
+  Picker,
+  TouchableHighlight,
+  Alert
 } from 'react-native';
 import { Category } from './components';
 import MatchService from '../../services/match-service';
@@ -15,7 +17,7 @@ import TournamentService from '../../services/tournament-service';
 
 const matchService = new MatchService();
 const teamService = new TeamService();
-const tourneyService = new TournamentService();
+const tournamentService = new TournamentService();
 
 // TODO: figure out some way of having a real multiline text field so that we can get rid of this character limit
 const COMMENTS_FIELD_LIMIT = 130;
@@ -33,6 +35,14 @@ export default class MatchAdd extends Component {
       tournamentOptions: [],
       commentsHeight: 40
     };
+  }
+
+  componentDidMount () {
+    tournamentService.getAll().then((tournaments) => {
+      this.setState({
+        tournamentOptions: tournaments
+      });
+    });
   }
 
   /**
@@ -97,14 +107,13 @@ export default class MatchAdd extends Component {
     matchToSave.tournamentOptions = undefined;
 
     matchToSave.team = this.props.navigation.state.params.team.number;
-    matchToSave.opponents = this.state.opponents.map(op => op.number);
-    matchToSave.allies = this.state.allies.map(ally => ally.number);
 
     return matchService.create(matchToSave)
       .then(() => {
         this.props.navigation.state.params.refresh();
         this.props.navigation.goBack();
-      });
+      })
+      .catch((error) => Alert.alert('Could not save match', error.message));
   }
 
   render () {
@@ -143,6 +152,26 @@ export default class MatchAdd extends Component {
       </View>
     );
 
+    const allianceToggle = (
+      <View style={{ flexDirection: 'row' }}>
+        <Text style={{ flex: 5 }}>{'Alliance'}</Text>
+        <TouchableHighlight
+          style={{
+            width: 75,
+            height: 40,
+            backgroundColor: this.state.alliance.toLowerCase(),
+            alignItems: 'center',
+            justifyContent: 'center'
+          }} onPress={() => {
+            this.setState({
+              alliance: this.state.alliance === 'RED' ? 'BLUE' : 'RED'
+            });
+        }}>
+          <Text style={{ fontSize: 20, color: 'white' }}>{this.state.alliance}</Text>
+        </TouchableHighlight>
+      </View>
+    );
+
     const winToggle = (
       <View style={{ flexDirection: 'row' }}>
         <Text style={{ flex: 5 }}>{'Win?'}</Text>
@@ -178,10 +207,10 @@ export default class MatchAdd extends Component {
       ));
 
     return (
-      <ScrollView style={{flex: 1, flexDirection: 'column'}}>
+      <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 10, marginRight: 10}}>
         {tournamentDropdown}
-        {allyDropdown}
         {matchNumField}
+        {allianceToggle}
         {winToggle}
         {commentsField}
         {categories}
