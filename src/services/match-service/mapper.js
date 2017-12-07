@@ -26,7 +26,7 @@ export function format (match) {
     return {
       id: match.id,
       team: self,
-      tournament: tournament,
+      tournament: tournament || { id: -1, name: 'Unknown' },
       number: match.number,
 
       // TODO: rename to code
