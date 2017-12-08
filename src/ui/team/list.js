@@ -20,14 +20,17 @@ const teamService = new TeamService();
 
 const NUM_OF_TILES = 5;
 const TILE_SIZE = Dimensions.get('window').width/NUM_OF_TILES;
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+const IS_PHONE = SCREEN_WIDTH < 400;
 
 function Team ({ team, clickHandler }) {
   /*<Image style={{ width: 175, height: 175 }} source={team}/>*/
   return (
     <TouchableHighlight onPress={() => clickHandler()}>
       <View style={{ backgroundColor: 'lightgrey', borderWidth: 1, borderColor: 'darkgrey', width: TILE_SIZE, height: TILE_SIZE, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-        <Text style={{ fontSize: 32 }}>{team.number}</Text>
-        <Text style={{ fontSize: 16, paddingLeft: 10, paddingRight: 10 }}>{team.name}</Text>
+        <Text style={{ fontSize: IS_PHONE ? 16 : 32, color: 'black' }}>{team.number}</Text>
+        {!IS_PHONE ? <Text style={{ fontSize: 16, paddingLeft: 10, paddingRight: 10 }}>{team.name}</Text> : null}
       </View>
     </TouchableHighlight>
   );
