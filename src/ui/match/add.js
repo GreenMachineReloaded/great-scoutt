@@ -10,7 +10,13 @@ import {
   TouchableHighlight,
   Alert
 } from 'react-native';
-import { Category } from './components';
+import {
+  Category,
+  TournamentDropdown,
+  MatchNumberField,
+  AllianceToggle,
+  Comments
+} from './components';
 import MatchService from '../../services/match-service';
 import TeamService from '../../services/team-service';
 import TournamentService from '../../services/tournament-service';
@@ -40,7 +46,7 @@ export default class MatchAdd extends Component {
   componentDidMount () {
     tournamentService.getAll().then((tournaments) => {
       this.setState({
-        tournamentOptions: tournaments
+        tournamentOptions: tournaments.map((tourney, i) => <Picker.Item key={i} label={tourney.name} value={tourney.id}/>)
       });
     });
   }
@@ -118,60 +124,6 @@ export default class MatchAdd extends Component {
 
   render () {
 
-    // TODO: Move this into a settings page so it can be set for the day and ignored
-    const renderedTourneyOptions = this.state.tournamentOptions.map((tourney, i) => <Picker.Item key={i} label={tourney.name} value={tourney.id}/>);
-    const tournamentDropdown = (
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={{ flex: 1 }}>{'Tournament'}</Text>
-        <Picker style={{ flex: 5 }} selectedValue={this.state.tournament} onValueChange={(value) => this.setState({
-          tournament: value
-        })}>
-          {renderedTourneyOptions}
-        </Picker>
-      </View>
-    );
-
-    // TODO: Break this component into another file (MatchNumField.js)
-    const matchNumField = (
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={{ flex: 1 }}>{'Match Number'}</Text>
-        <TextInput
-          keyboardType={'numeric'}
-          value={`${this.state.number || ''}`}
-          style={{ flex: 5 }} placeholder="Please enter the match number..."
-          onChangeText={(value) => {
-
-            // FIXME: does not validate decimal points
-            if (!isNaN(value) && value > 0) {
-              this.setState({
-                number: parseInt(value)
-              });
-            }
-          }}
-        />
-      </View>
-    );
-
-    const allianceToggle = (
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={{ flex: 5 }}>{'Alliance'}</Text>
-        <TouchableHighlight
-          style={{
-            width: 75,
-            height: 40,
-            backgroundColor: this.state.alliance.toLowerCase(),
-            alignItems: 'center',
-            justifyContent: 'center'
-          }} onPress={() => {
-            this.setState({
-              alliance: this.state.alliance === 'RED' ? 'BLUE' : 'RED'
-            });
-        }}>
-          <Text style={{ fontSize: 20, color: 'white' }}>{this.state.alliance}</Text>
-        </TouchableHighlight>
-      </View>
-    );
-
     const winToggle = (
       <View style={{ flexDirection: 'row' }}>
         <Text style={{ flex: 5 }}>{'Win?'}</Text>
@@ -179,22 +131,6 @@ export default class MatchAdd extends Component {
           win: value
         })}/>
       </View>
-    );
-
-    const commentsField = (
-      <TextInput
-        style={{ height: 40 }}
-        multiline={true}
-        placeholder={'Comments...'}
-        onChangeText={(value) => {
-          if (value.length < COMMENTS_FIELD_LIMIT) {
-            this.setState({
-              comments: value
-            });
-          }
-        }}
-        value={this.state.comments}
-      />
     );
 
     const categories = this.state.data.categories
@@ -208,11 +144,31 @@ export default class MatchAdd extends Component {
 
     return (
       <ScrollView style={{flex: 1, flexDirection: 'column', marginLeft: 10, marginRight: 10}}>
-        {tournamentDropdown}
-        {matchNumField}
-        {allianceToggle}
+        <TournamentDropdown
+          tournament={this.state.tournament}
+          onValueChange={((value) => this.setState({ tournament: value })).bind(this)}>
+            {this.state.tournamentOptions}
+        </TournamentDropdown>
+        <MatchNumberField number={this.state.number} onChangeText={(value) => {
+  
+          // FIXME: does not validate decimal points
+          if (!isNaN(value)) {
+            this.setState({
+              number: parseInt(value)
+            });
+          }
+        }}/>
+        <AllianceToggle
+          alliance={this.state.alliance}
+          onPress={(() => this.setState({ alliance: this.state.alliance === 'RED' ? 'BLUE' : 'RED' })).bind(this)}/>
         {winToggle}
-        {commentsField}
+        <Comments textValue={this.state.comments} onChangeText={(value) => {
+          if (value.length < COMMENTS_FIELD_LIMIT) {
+            this.setState({
+              comments: value
+            });
+          }
+        }}/>
         {categories}
         <Button title="Save" onPress={this.saveMatch.bind(this)}/>
       </ScrollView>

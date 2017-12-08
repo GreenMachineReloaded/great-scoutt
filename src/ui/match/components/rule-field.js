@@ -1,8 +1,8 @@
-import React from 'react'
-import { View, Text, Switch, TextInput } from 'react-native'
-import IncrementingNumber from './incrementing-number'
+import React from 'react';
+import { View, Text, Switch, TextInput } from 'react-native';
+import IncrementingNumber from './incrementing-number';
 
-import style from './components.style'
+import style from './components.style';
 
 // put all the rules together
 function getRulesFromMatch (match) {

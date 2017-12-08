@@ -79,7 +79,7 @@ function setupMatchCollection (collection, teamCollection) {
       if (match.number < 1) {
         return Promise.reject({
           name: 'DbSchemaError',
-          message: 'Match number must be greater than 1.'
+          message: 'Match number must be greater than 0.'
         });
       } else {
         return collection.add(Object.assign(match, { matchId: `${match.tournament}-${match.number}` }));
