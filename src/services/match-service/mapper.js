@@ -1,17 +1,10 @@
 import TournamentService from '../tournament-service';
-import TeamService from '../team-service';
+import TeamService from '../team-service/service';
 
 const gameConfig = require('../../data/game-config');
 
 const tourneyService = new TournamentService();
 const teamService = new TeamService();
-
-function getTeams(teams) {
-  return Promise.all(teams.map((number) => {
-    return teamService.get({ number })
-      .then(([firstResult]) => firstResult);
-  }));
-}
 
 /**
  * This function grabs information from other services to provide a more
@@ -19,25 +12,20 @@ function getTeams(teams) {
  */
 export function format (match) {
   return Promise.all([
-    tourneyService.get({ id: match.tournament }),
-    getTeams([match.team])
+    tourneyService.get({ id: match.tournament }).then(([tournament]) => tournament),
+    teamService.get({ number: match.team }).then(([team]) => team)
   ])
-  .then(([[tournament], [self]]) => {
+  .then(([tournament, team]) => {
     return {
       id: match.id,
-      team: self,
+      team: team,
       tournament: tournament || { id: -1, name: 'Unknown' },
       number: match.number,
 
       // TODO: rename to code
       matchId: match.matchId,
-
       win: match.win,
-
-      // need to ensure that 'RED' and 'BLUE' are the only two allowable options.
-      // if for some reason we have a different value, record it as 'UNKNOWN'
       alliance: match.alliance,
-
       comments: match.comments,
       data: {
         categories: match.data.categories.map((category) => {
@@ -55,6 +43,9 @@ export function format (match) {
         })
       }
     };
+  })
+  .catch((error) => {
+    console.log(error);
   });
 }
 

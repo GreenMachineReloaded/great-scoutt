@@ -84,8 +84,6 @@ function setupMatchCollection (collection, teamCollection) {
       } else {
         return collection.add(Object.assign(match, { matchId: `${match.tournament}-${match.number}` }));
       }
-
-      
     }).bind(collection),
 
     update: collection.update.bind(collection),

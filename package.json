@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "android:debug": "cd android && ./gradlew assembleDebug",
-    "android:release": "cd android && ./gradlew assembleRelease",
+    "build:android": "cd android && ./gradlew assembleDebug && npm run build:android:rename",
+    "build:android:rename": "mv android/app/build/outputs/apk/app-debug.apk android/app/build/outputs/apk/great-scoutt.apk",
+    "build:android:release": "cd android && ./gradlew assembleRelease",
     "test": "jest"
   },
   "dependencies": {

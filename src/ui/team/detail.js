@@ -16,20 +16,20 @@ const teamService = new TeamService();
 export default class TeamDetail extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.name,
-    // headerRight: (
-    //   <View style={{ flexDirection: 'row' }}>
-    //     <Button style={{ flex: 1 }} title="Edit" onPress={() => navigation.navigate('TeamEditScreen', navigation.state.params)}/>
-    //     <Button style={{ flex: 1, color: 'red' }} title="Delete" onPress={() => {
-    //       teamService.delete(navigation.state.params.number)
-    //         .then((result) => navigation.goBack('TeamListScreen'))
-    //         .catch((error) => {
-    //           if (error.name === 'DbDeleteOpError') {
-    //             Alert.alert('Can\'t Delete This Team', error.message);
-    //           }
-    //         });
-    //     }}/>
-    //   </View>
-    // ),
+    headerRight: (
+      <View style={{ flexDirection: 'row' }}>
+        {/* <Button style={{ flex: 1 }} title="Edit" onPress={() => navigation.navigate('TeamEditScreen', navigation.state.params)}/> */}
+        <Button style={{ flex: 1, color: 'red' }} title="Delete" onPress={() => {
+          teamService.delete(navigation.state.params.number)
+            .then((result) => navigation.goBack('TeamListScreen'))
+            .catch((error) => {
+              if (error.name === 'DbDeleteOpError') {
+                Alert.alert('Can\'t Delete This Team', error.message);
+              }
+            });
+        }}/>
+      </View>
+    ),
     headerStyle: globalStyle.headerStyle
   });
 

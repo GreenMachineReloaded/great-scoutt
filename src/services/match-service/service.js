@@ -13,7 +13,9 @@ MatchService.prototype.getAll = function () {
 
 MatchService.prototype.get = function (params) {
   return this.matches.filter(params)
-    .then((matches) => Promise.all(matches.map(format)));
+    .then((matches) => {
+      return Promise.all(matches.map(format));
+    });
 };
 
 // TODO: consider reworking this horrible CRUD system

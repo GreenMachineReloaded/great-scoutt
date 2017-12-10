@@ -8,7 +8,7 @@ import {
   Alert
 } from 'react-native';
 import TournamentService from '../../services/tournament-service';
-import TeamService from '../../services/team-service';
+import TeamService from '../../services/team-service/service';
 import MatchService from '../../services/match-service';
 
 const tourneyService = new TournamentService();
@@ -70,7 +70,6 @@ export default class MatchList extends Component {
   refresh () {
     matchService.get({ team: this.props.team.number })
       .then((matches) => {
-
         let lastTId;
         this.setState({
           renderedMatchList: matches.reduce((accum, match) => {
@@ -91,7 +90,7 @@ export default class MatchList extends Component {
           }, [])
         });
       })
-      .catch((error) => Alert.alert(error.message));
+      .catch((error) => Alert.alert('Error', error.message));
   }
 
   render () {

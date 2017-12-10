@@ -32,7 +32,7 @@ Collection.prototype.getData = function () {
         return this.data || [];
       })
       .catch((error) => {
-        console.log(error);
+        console.log('FileError!', error.message);
         return this.save().then(() => Promise.resolve(this.data));
       });
   }
@@ -102,7 +102,7 @@ Collection.prototype.update = function (id, modifiedFields) {
       const currentItemIndex = data.findIndex((item) => item.id === id);
       if (currentItemIndex < 0) {
         return Promise.reject({
-          name: 'DBUpdateOpError',
+          name: 'DbUpdateOpError',
           message: 'Cannot find index for item to modify'
         });
       }
