@@ -124,15 +124,6 @@ export default class MatchAdd extends Component {
 
   render () {
 
-    const winToggle = (
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={{ flex: 5 }}>{'Win?'}</Text>
-        <Switch style={{ flex: 1 }} value={this.state.win} onValueChange={(value) => this.setState({
-          win: value
-        })}/>
-      </View>
-    );
-
     const categories = this.state.data.categories
       .map((category, i) => (
         <Category

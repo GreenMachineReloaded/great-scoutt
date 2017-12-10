@@ -8,7 +8,7 @@ const teamService = new TeamService();
 
 /**
  * This function grabs information from other services to provide a more
- * complete match result, and also merges in rule metadata data from gameConfig
+ * complete match result, and also merges in rule metadata from gameConfig
  */
 export function format (match) {
   return Promise.all([
@@ -24,7 +24,6 @@ export function format (match) {
 
       // TODO: rename to code
       matchId: match.matchId,
-      win: match.win,
       alliance: match.alliance,
       comments: match.comments,
       data: {
@@ -56,7 +55,6 @@ export function empty (team) {
     tournament: 0,
     number: 0,
     matchId: '',
-    win: false,
     alliance: 'RED',
     comments: '',
     data: {
