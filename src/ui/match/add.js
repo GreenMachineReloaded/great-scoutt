@@ -152,7 +152,6 @@ export default class MatchAdd extends Component {
         <AllianceToggle
           alliance={this.state.alliance}
           onPress={(() => this.setState({ alliance: this.state.alliance === 'RED' ? 'BLUE' : 'RED' })).bind(this)}/>
-        {winToggle}
         <Comments textValue={this.state.comments} onChangeText={(value) => {
           if (value.length < COMMENTS_FIELD_LIMIT) {
             this.setState({
