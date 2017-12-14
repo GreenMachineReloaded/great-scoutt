@@ -36,7 +36,7 @@ function Match ({ match, detailClicked, editClicked }) {
   const style = {
     borderBottomWidth: 1,
     borderBottomColor: 'lightgray',
-    height: 50,
+    height: 70,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row'
@@ -45,7 +45,7 @@ function Match ({ match, detailClicked, editClicked }) {
   return (
     <View style={style}>
       <TouchableOpacity style={{ flex: 1, justifyContent: 'center', flexDirection: 'row', marginLeft: 10 }} onPress={() => detailClicked()}>
-        <Text style={{ flex: 1, textAlign: 'left' }}>{`Match ${match.number}`}</Text>
+        <Text style={{ flex: 1, textAlign: 'left', fontSize: 36 }}>{`Match ${match.number}`}</Text>
       </TouchableOpacity>
       <TouchableOpacity style={{ height: 45, alignItems: 'center', justifyContent: 'center' }} onPress={() => editClicked()}>
         <Text style={{ paddingLeft: 10, paddingRight: 10, textAlign: 'center', color: 'white', fontSize: 36, backgroundColor: '#4286f4' }}>{'✏'}</Text>
