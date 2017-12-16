@@ -14,6 +14,13 @@ MatchService.prototype.getAll = function () {
 MatchService.prototype.get = function (params) {
   return this.matches.filter(params)
     .then((matches) => {
+      matches.sort((a, b) => {
+        const tDiff = a.tournament - b.tournament;
+        if (tDiff === 0) {
+          return a.number - b.number;
+        }
+        return tDiff;
+      });
       return Promise.all(matches.map(format));
     });
 };
