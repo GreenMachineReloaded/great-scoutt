@@ -7,7 +7,7 @@
     "merge": "node scripts/merge-matches",
     "convert-to-text": "node scripts/convert-to-text",
     "build:android": "cd android && gradlew assembleDebug && npm run build:android:rename",
-    "build:android:rename": "mv android/app/build/outputs/apk/app-debug.apk android/app/build/outputs/apk/great-scoutt.apk",
+    "build:android:rename": "rm -rf build/ && mkdir build && cd build && mkdir android && cd .. && mv android/app/build/outputs/apk/app-debug.apk build/android/great-scoutt.apk",
     "build:android:release": "cd android && gradlew assembleRelease",
     "test": "jest"
   },
