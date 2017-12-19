@@ -21,10 +21,15 @@ export default class TeamDetail extends Component {
         {/* <Button style={{ flex: 1 }} title="Edit" onPress={() => navigation.navigate('TeamEditScreen', navigation.state.params)}/> */}
         <Button style={{ flex: 1, color: 'red' }} title="Delete" onPress={() => {
           teamService.delete(navigation.state.params.number)
-            .then((result) => navigation.goBack('TeamListScreen'))
+            .then((result) => {
+              navigation.state.params.refresh();
+              navigation.goBack();
+            })
             .catch((error) => {
               if (error.name === 'DbDeleteOpError') {
                 Alert.alert('Can\'t Delete This Team', error.message);
+              } else {
+                Alert.alert('Unknown Error', error.message);
               }
             });
         }}/>

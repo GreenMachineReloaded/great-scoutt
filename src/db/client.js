@@ -40,26 +40,18 @@ function setupTeamCollection (collection, matchCollection) {
     update: collection.update.bind(collection),
 
     // check if team is contained in any matches
-    remove: ((id) => {
-      return matchCollection.getAll()
-        .then((matches) => {
-          const isAlly = matches.find(({ allies }) => allies.find((allyId) => allyId === id));
-          const isOpponent =  matches.find(({ opponents }) => opponents.find((oppoId) => oppoId === id));
-          const hasMatchData = matches.find(({ team }) => team === id);
-
-          if (hasMatchData) {
+    remove: ((teamId) => {
+      return collection.find(({ id }) => id === teamId)
+        .then(({ number }) => matchCollection.find((match) => match.team === number))
+        .then((match) => {
+          if (match) {
             return Promise.reject({
               name: 'DbDeleteOpError',
               message: 'This team cannot be deleted because it has match data.'
             });
-          } else if (isAlly || isOpponent) {
-            return Promise.reject({
-              name: 'DbDeleteOpError',
-              message: 'This team cannot be deleted because it is an ally or opponent in a match.'
-            });
           }
 
-          return collection.remove(id);
+          return collection.remove(teamId);
         });
     }).bind(collection),
 

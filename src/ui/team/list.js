@@ -99,17 +99,16 @@ export default class TeamList extends Component {
   }
 
   refresh () {
+    const self = this;
     teamService.getAll()
       .then((teams) => {
         this.setState({
           listSections: teams && teams.reduce((sections, team, i) => createSections(sections, team, i, () => {
-            this.props.navigation.navigate('TeamDetailScreen', team);
+            this.props.navigation.navigate('TeamDetailScreen', { ...team, refresh: this.refresh.bind(self) });
           }), [])
         });
       })
-      .catch((error) => {
-        Alert.alert('Error :-(', error.message)
-      });
+      .catch((error) => Alert.alert('Error :-(', error.message));
   }
 
   render () {
