@@ -24,7 +24,11 @@ function getScores (match) {
 export function format (team) {
   return matchService.get({ team: team.number })
     .then((matches) => {
-      const scores = matches.map(getScores);
+      let numOfDead = 0;
+      const scores = matches.map((match)=> {
+        match.comments.includes('dead') || match.comments.includes('died') ? numOfDead++ : null;
+        return getScores(match);
+      });
       const avgScores = scores.reduce((runningAvgScores, currentScores) => {
         return {
           autonomous: (runningAvgScores.autonomous + currentScores.autonomous) / 2,
@@ -38,7 +42,9 @@ export function format (team) {
         id: team.id,
         name: team.name,
         number: team.number,
-        isTop: avgScores.total > 120
+        isTop: avgScores.total > 120,
+        averageScores: avgScores,
+        timesDead: numOfDead
       };
     });
 }

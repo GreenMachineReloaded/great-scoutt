@@ -21,9 +21,18 @@ const teamService = new TeamService();
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const IS_PHONE = SCREEN_WIDTH < 400;
 
-const NUM_OF_TILES = IS_PHONE ? 4 : 6;
+const NUM_OF_TILES = IS_PHONE ? 1 : 2;
 const TILE_MARGIN = (SCREEN_WIDTH - 20) * 0.03;
 const TILE_SIZE = ((SCREEN_WIDTH - 20) / NUM_OF_TILES) - TILE_MARGIN;
+
+function DataRow ({ label, data }) {
+  return (
+    <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+      <Text>{label}</Text>
+      <Text>{!isNaN(data) ? Math.round(data) : data}</Text>
+    </View>
+  );
+}
 
 function Team ({ index, team, clickHandler }) {
   const isNotLastTile = index + 1 > (index % NUM_OF_TILES);
@@ -36,23 +45,34 @@ function Team ({ index, team, clickHandler }) {
     backgroundColor: 'white',
     borderWidth: team.isTop ? 2 : 1, borderColor: team.isTop ? 'red' : 'lightgrey', borderRadius: IS_PHONE ? 60 : 0,
     width: TILE_SIZE, height: TILE_SIZE,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    paddingTop: 5,
+    paddingLeft: 10,
+    paddingRight: 10
+  };
+
+  const teamNumberStyle = {
+    fontSize: IS_PHONE ? 16 : 32,
+    color: 'black'
   };
 
   const teamNameStyle = {
-    fontSize: 16,
-    paddingLeft: 10,
-    paddingRight: 10
+    fontSize: 16
   };
 
   return (
     <View style={{ marginRight: isNotLastTile ? TILE_MARGIN : 0 }}>
       <TouchableHighlight style={{ borderRadius: IS_PHONE ? 60 : 0 }} onPress={() => clickHandler()}>
         <View style={teamStyle}>
-          <Text style={{ fontSize: IS_PHONE ? 16 : 32, color: 'black' }}>{team.number}</Text>
-          {!IS_PHONE ? <Text numberOfLines={2} style={teamNameStyle}>{team.name}</Text> : null}
+          <Text style={teamNumberStyle}>{team.number}</Text>
+          <Text numberOfLines={1} style={teamNameStyle}>{team.name}</Text>
+          <View style={{ borderTopWidth: 1, borderTopColor: 'darkgrey', marginTop: 5, paddingTop: 2 }}>
+            <DataRow label={'Auto'} data={team.averageScores.autonomous}/>
+            <DataRow label={'Teleop'} data={team.averageScores.teleop}/>
+            <DataRow label={'End Game'} data={team.averageScores.endGame}/>
+            <DataRow label={'Total'} data={team.averageScores.total}/>
+            <DataRow label={'Times Dead'} data={team.timesDead}/>
+          </View>
         </View>
       </TouchableHighlight>
     </View>
