@@ -2,6 +2,8 @@ import MatchService from '../match-service';
 
 const matchService = new MatchService();
 
+const deadSynonyms = require('./dead-synonyms');
+
 function getCategoryScore (category) {
   return category.rules.reduce((totalCategoryScore, rule) => {
     return totalCategoryScore + rule.points;
@@ -26,7 +28,10 @@ export function format (team) {
     .then((matches) => {
       let numOfDead = 0;
       const scores = matches.map((match)=> {
-        match.comments.includes('dead') || match.comments.includes('died') ? numOfDead++ : null;
+        const didDie = !!deadSynonyms.find((ds) => match.comments.toLowerCase().includes(ds));
+        if (didDie) {
+          numOfDead++;
+        }
         return getScores(match);
       });
       const avgScores = scores.reduce((runningAvgScores, currentScores) => {
