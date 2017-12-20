@@ -22,8 +22,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const IS_PHONE = SCREEN_WIDTH < 400;
 
 const NUM_OF_TILES = IS_PHONE ? 1 : 2;
-const TILE_MARGIN = (SCREEN_WIDTH - 20) * 0.03;
-const TILE_SIZE = ((SCREEN_WIDTH - 20) / NUM_OF_TILES) - TILE_MARGIN;
+const TILE_MARGIN = (SCREEN_WIDTH) * 0.03;
+const TILE_SIZE = ((SCREEN_WIDTH - TILE_MARGIN) / NUM_OF_TILES) - TILE_MARGIN;
 
 function DataRow ({ label, data }) {
   return (
@@ -35,16 +35,14 @@ function DataRow ({ label, data }) {
 }
 
 function Team ({ index, team, clickHandler }) {
-  const isNotLastTile = index + 1 > (index % NUM_OF_TILES);
+  const isLastTile = (index + 1) % NUM_OF_TILES === 0;
 
   const teamStyle = {
     backgroundColor: 'white',
-    borderWidth: team.isTop ? 2 : 1, borderColor: 'lightgrey', borderRadius: IS_PHONE ? 60 : 0,
-    width: TILE_SIZE, height: TILE_SIZE,
+    borderWidth: 1, borderColor: 'lightgrey', borderRadius: 0,
+    width: TILE_SIZE,
     flexDirection: 'column',
-    paddingTop: 5,
-    paddingLeft: 10,
-    paddingRight: 10
+    padding: TILE_MARGIN
   };
 
   const teamNumberStyle = {
@@ -57,7 +55,7 @@ function Team ({ index, team, clickHandler }) {
   };
 
   return (
-    <View style={{ marginRight: isNotLastTile ? TILE_MARGIN : 0 }}>
+    <View style={{ marginRight: isLastTile ? 0 : TILE_MARGIN }}>
       <TouchableHighlight style={{ borderRadius: IS_PHONE ? 60 : 0 }} onPress={() => clickHandler()}>
         <View style={teamStyle}>
           <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
@@ -138,7 +136,7 @@ export default class TeamList extends Component {
             this.props.navigation.navigate('TeamAddScreen', { refresh: this.refresh.bind(this) })}/>
         </View>
         <FlatList
-          style={{ margin: 10 }}
+          style={{ padding: TILE_MARGIN }}
           data={this.state.listSections}
           renderItem={({ index, item: section }) => {
             return (
