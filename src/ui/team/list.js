@@ -37,13 +37,9 @@ function DataRow ({ label, data }) {
 function Team ({ index, team, clickHandler }) {
   const isNotLastTile = index + 1 > (index % NUM_OF_TILES);
 
-  const bgRed = team.isTop ? 200 : 255;
-  const bgGreen = 255;
-  const bgBlue = team.isTop ? 200 : 255;
-
   const teamStyle = {
     backgroundColor: 'white',
-    borderWidth: team.isTop ? 2 : 1, borderColor: team.isTop ? 'red' : 'lightgrey', borderRadius: IS_PHONE ? 60 : 0,
+    borderWidth: team.isTop ? 2 : 1, borderColor: 'lightgrey', borderRadius: IS_PHONE ? 60 : 0,
     width: TILE_SIZE, height: TILE_SIZE,
     flexDirection: 'column',
     paddingTop: 5,
@@ -64,7 +60,10 @@ function Team ({ index, team, clickHandler }) {
     <View style={{ marginRight: isNotLastTile ? TILE_MARGIN : 0 }}>
       <TouchableHighlight style={{ borderRadius: IS_PHONE ? 60 : 0 }} onPress={() => clickHandler()}>
         <View style={teamStyle}>
-          <Text style={teamNumberStyle}>{team.number}</Text>
+          <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+            <Text style={teamNumberStyle}>{team.number}</Text>
+            <Text style={{ fontSize: 26 }}>{team.isTop ? '☺' : ''}</Text>
+          </View>
           <Text numberOfLines={1} style={teamNameStyle}>{team.name}</Text>
           <View style={{ borderTopWidth: 1, borderTopColor: 'darkgrey', marginTop: 5, paddingTop: 2 }}>
             <DataRow label={'Auto'} data={team.averageScores.autonomous}/>
