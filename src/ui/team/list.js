@@ -100,7 +100,12 @@ function createSections (sections, team, i, clickHandler) {
 export default class TeamList extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Teams',
-    headerStyle: globalStyle.headerStyle
+    headerStyle: globalStyle.headerStyle,
+    headerRight: (
+      <TouchableHighlight style={{ width: 46 }} onPress={() => navigation.navigate('SettingsListScreen')}>
+        <Text style={{ fontSize: 28 }}>{'🔧'}</Text>
+      </TouchableHighlight>
+    )
   });
 
   constructor (props) {
