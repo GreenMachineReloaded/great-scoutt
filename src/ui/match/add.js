@@ -20,10 +20,12 @@ import {
 import MatchService from '../../services/match-service';
 import TeamService from '../../services/team-service';
 import TournamentService from '../../services/tournament-service';
+import SettingsService from '../../services/settings-service';
 
 const matchService = new MatchService();
 const teamService = new TeamService();
 const tournamentService = new TournamentService();
+const settingsService = new SettingsService();
 
 // TODO: figure out some way of having a real multiline text field so that we can get rid of this character limit
 const COMMENTS_FIELD_LIMIT = 130;
@@ -44,11 +46,13 @@ export default class MatchAdd extends Component {
   }
 
   componentDidMount () {
-    tournamentService.getAll().then((tournaments) => {
-      this.setState({
-        tournamentOptions: tournaments.map((tourney, i) => <Picker.Item key={i} label={tourney.name} value={tourney.id}/>)
+    Promise.all([tournamentService.getAll(), settingsService.getAll()])
+      .then(([tournaments, settings]) => {
+        this.setState({
+          tournament: settings.currentTournament,
+          tournamentOptions: tournaments.map((tourney, i) => <Picker.Item key={i} label={tourney.name} value={tourney.id}/>)
+        });
       });
-    });
   }
 
   /**
@@ -111,6 +115,7 @@ export default class MatchAdd extends Component {
     const matchToSave = this.state;
     
     matchToSave.tournamentOptions = undefined;
+    matchToSave.commentsheight = undefined;
 
     matchToSave.team = this.props.navigation.state.params.team.number;
 
