@@ -19,10 +19,18 @@ import style from './list.style';
 const teamService = new TeamService();
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const IS_PHONE = SCREEN_WIDTH < 400;
+const IS_PHONE = SCREEN_WIDTH < 500;
 
-const NUM_OF_TILES = IS_PHONE ? 1 : 2;
-const TILE_MARGIN = (SCREEN_WIDTH) * 0.03;
+const NUM_OF_TILES = (() => {
+  if (SCREEN_WIDTH < 360) {
+    return 1;
+  } else if (SCREEN_WIDTH < 500) {
+    return 2;
+  } else {
+    return 4;
+  }
+})();
+const TILE_MARGIN = (SCREEN_WIDTH) * 0.02;
 const TILE_SIZE = ((SCREEN_WIDTH - TILE_MARGIN) / NUM_OF_TILES) - TILE_MARGIN;
 
 function DataRow ({ label, data }) {
@@ -46,7 +54,7 @@ function Team ({ index, team, clickHandler }) {
   };
 
   const teamNumberStyle = {
-    fontSize: IS_PHONE ? 16 : 32,
+    fontSize: 32,
     color: 'black'
   };
 
