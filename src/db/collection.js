@@ -8,31 +8,53 @@ import FileSystem from 'react-native-filesystem-v1';
  * @param  {string} path     path to data file
  * @param  {array}  initData array of objects to initialize with (if null will load current db from path)
  */
-function Collection (path='', initData=null, autoSave=false) {
+function Collection (path='', initData=[], autoSave=false) {
   if (!path.length) {
     throw new Error('Please provide a path for the database...');
   }
 
   this.path = path;
   this.autoSave = autoSave;
-  this.data = initData;
+  this.initData = initData;
+  this.data = null;
 };
 
+let loading = {};
+
 Collection.prototype.getData = function () {
-  if (!this.data) {
-    console.log(`Reading from ${this.path}`);
+
+  // check if this file path is currently being loaded
+  if (loading[this.path]) {
+
+    // if so, wait 20 ms and try getting it again
+    return new Promise((done) => setTimeout(() => this.getData().then(done), 10));
+  }
+
+  // if our data object is not initialized, do so
+  if (this.data === null) {
+    console.log(`Reading from ${this.path}...`);
+    loading[this.path] = true;
     return FileSystem.readFile(this.path, FileSystem.storage.extBackedUp)
       .then((rawText) => {
+        console.log(`Done reading ${this.path}`);
         try {
-          this.data = JSON.parse(rawText);
+          const data = JSON.parse(rawText);
+          this.data = data.length ? data : this.initData;
+          loading[this.path] = false;
+
+          // if there is no data on disk, we need to save our preset data
+          if (!data) {
+            this.save();
+          }
         } catch (e) {
           throw new Error('failed parsing json file: ' + this.path)
         }
-        
-        return this.data || [];
+
+        return this.data;
       })
       .catch((error) => {
-        console.log('FileError!', error.message);
+        console.log('FileError!', error.message, 'creating file...');
+        this.data = this.initData;
         return this.save().then(() => Promise.resolve(this.data));
       });
   }

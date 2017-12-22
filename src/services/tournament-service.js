@@ -1,8 +1,6 @@
 import DbClient from '../db/client';
 
-const TOURNAMENT_DATA_DIR = '../data/tournaments.json';
-
-function TournamentService(defaultDataDir) {
+function TournamentService () {
   const database = new DbClient();
   this.tournaments = database.tournamentCollection;
 }
