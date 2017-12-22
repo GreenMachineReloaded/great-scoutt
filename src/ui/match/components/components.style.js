@@ -16,7 +16,7 @@ export default {
       marginBottom: 5
     },
     manipulatorContainer: {
-      width: 80
+      width: 75
     },
     textInput: {
       width: 250,

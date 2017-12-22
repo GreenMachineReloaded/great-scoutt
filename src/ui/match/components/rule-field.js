@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Switch, TextInput } from 'react-native';
 import IncrementingNumber from './incrementing-number';
+import Toggle from './toggle';
 
 import style from './components.style';
 
@@ -21,7 +22,6 @@ export default function RuleField ({ match, rule, index, fieldUpdated }) {
     return (
       <View style={style.ruleField.container}>
         <Text style={style.ruleField.label}>{rule.name}</Text>
-        <Text style={style.ruleField.pointsLabel}>{rule.points}</Text>
         <View style={style.ruleField.manipulatorContainer}>
           {children}
         </View>
@@ -29,7 +29,7 @@ export default function RuleField ({ match, rule, index, fieldUpdated }) {
     );
   }
 
-  let field = <Text style={{width: 60, height: 40}}>{'FIXME'}</Text>;
+  let field = <Text style={{width: 75, height: 40}}>{'FIXME'}</Text>;
 
   const matchRule = getRule(rule.name, match);
 
@@ -50,9 +50,13 @@ export default function RuleField ({ match, rule, index, fieldUpdated }) {
       }
       break;
     case 'boolean':
-      field = <Switch key={index} value={matchRule.points > 0} onValueChange={
-        (value) => fieldUpdated(matchRule.name, rule.type, value)
-      }/>;
+      field = <Toggle
+                key={index}
+                label={matchRule.points ? matchRule.value : 0}
+                color={matchRule.points ? '#edffed' : 'white'}
+                onPress={() => {
+                  fieldUpdated(matchRule.name, rule.type, !matchRule.points ? matchRule.value : 0)
+                }}/>;
       break;
   }
 
