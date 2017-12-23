@@ -2,6 +2,7 @@ import assert from 'assert';
 import sinon from 'sinon';
 import FileSystem from 'react-native-filesystem-v1';
 import TeamService from './index';
+import { assertProps, stubReadFile, unStubReadFile } from '../../utils';
 
 const teamService = new TeamService();
 
@@ -13,33 +14,6 @@ function createTeam () {
     name: `Team ${teamCounter++}`,
     number: `${Math.round(Math.random() * 20000)}`
   };
-}
-
-// returns true of object has all properties
-function assertProps (actual, expected, path='root.') {
-  const actualProps = Object.keys(actual);
-  const expectedProps = Object.keys(expected);
-
-  // doing 2 asserts here because if you are just missing a property this first
-  // assert is a bit clearer
-  assert.deepEqual(actualProps, expectedProps);
-  expectedProps.forEach((prop) => {
-    if (typeof expected[prop] === 'object') {
-
-      // if this is an object, step into it
-      assertProps(actual[prop], expected[prop], path + `${prop}.`);
-    } else {
-      assert(expected[prop] === actual[prop], `expected ${path + prop} === ${actual[prop]} NOT ${path + prop} === ${expected[prop]}`);
-    }
-  });
-}
-
-function stubReadFile (data) {
-  sinon.stub(FileSystem, 'readFile').callsFake(() => Promise.resolve(JSON.stringify(data)));
-}
-
-function unStubReadFile () {
-  FileSystem.readFile.restore();
 }
 
 describe('Team Service', () => {

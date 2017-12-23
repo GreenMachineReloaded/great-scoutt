@@ -1,4 +1,6 @@
-import DbClient from '../db/client';
+import DbClient from '../../db/client';
+
+// FIXME: move object reformatting code into a mapper
 
 function SettingsService () {
   const database = new DbClient();
@@ -8,6 +10,8 @@ function SettingsService () {
 SettingsService.prototype.getAll = function () {
 
   // convert from an array of settings to a single options object
+  // TODO: cache transformed settings array so we don't have to
+  // do this every time
   return this.settings.getAll()
     .then((settings) => {
       return settings.reduce((accumSettings, entry) => {
@@ -30,13 +34,12 @@ SettingsService.prototype.update = function (updatedSettings) {
     .then((settings) => {
 
       // create a promise to update every setting entry
-      return Promise.all(settings.map((setting) => {
-
-        // get new value for current setting
-        const newSettingValue = updatedSettings[setting.name];
+      return Promise.all(Object.keys(updatedSettings).map((settingName) => {
+        const newSettingValue = updatedSettings[settingName];
+        const currentSetting = settings.find((s) => s.name === settingName);
 
         // update the setting
-        return this.settings.update(setting.id, Object.assign({}, setting, { value: newSettingValue }));
+        return this.settings.update(currentSetting.id, Object.assign({}, currentSetting, { value: newSettingValue }));
       }));
     });
 };
