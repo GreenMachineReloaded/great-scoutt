@@ -32,11 +32,9 @@ Collection.prototype.getData = function () {
 
   // if our data object is not initialized, do so
   if (this.data === null) {
-    console.log(`Reading from ${this.path}...`);
     loading[this.path] = true;
     return FileSystem.readFile(this.path, FileSystem.storage.extBackedUp)
       .then((rawText) => {
-        console.log(`Done reading ${this.path}`);
         try {
           const data = JSON.parse(rawText);
           this.data = data.length ? data : this.initData;
@@ -162,6 +160,10 @@ Collection.prototype.save = function () {
   }
 
   return FileSystem.writeToFile(this.path, JSON.stringify(dataToWrite), false, FileSystem.storage.extBackedUp);
+};
+
+Collection.prototype.reload = function () {
+  this.data = null;
 };
 
 export default Collection;

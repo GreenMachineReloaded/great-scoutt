@@ -9,8 +9,8 @@ let instance;
  */
 function Client () {
   if (!instance) {
-    const newMatchCollection = new Collection('matches.json', null);
-    const newTeamCollection = new Collection('teams.json', null);
+    const newMatchCollection = new Collection('matches.json', []);
+    const newTeamCollection = new Collection('teams.json', []);
     const matchCollection = setupMatchCollection(newMatchCollection, newTeamCollection);
     const tournamentCollection = new Collection('tournaments.json', require('../data/tournaments'));
     const settingsCollection = new Collection('settings.json', require('../data/settings'));
@@ -57,7 +57,8 @@ function setupTeamCollection (collection, matchCollection) {
     }).bind(collection),
 
     clear: collection.clear.bind(collection),
-    save: collection.save.bind(collection)
+    save: collection.save.bind(collection),
+    reload: collection.reload.bind(collection)
   };
 }
 
