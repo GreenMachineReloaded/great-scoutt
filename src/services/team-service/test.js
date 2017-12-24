@@ -2,23 +2,15 @@ import assert from 'assert';
 import sinon from 'sinon';
 import FileSystem from 'react-native-filesystem-v1';
 import TeamService from './index';
-import { assertProps, stubReadFile, unStubReadFile } from '../../utils';
+import { assertProps, stubReadFile, unStubReadFile, createTeam } from '../../utils';
 
 const teamService = new TeamService();
 
-let teamCounter = 0;
-
-function createTeam () {
-  return {
-    id: Date.now(),
-    name: `Team ${teamCounter++}`,
-    number: `${Math.round(Math.random() * 20000)}`
-  };
-}
-
 describe('Team Service', () => {
 
-  beforeAll(() => sinon.stub(FileSystem, 'writeToFile').callsFake(() => Promise.resolve({ success: true })));
+  beforeAll(() => {
+    sinon.stub(FileSystem, 'writeToFile').callsFake(() => Promise.resolve({ success: true }))
+  });
 
   describe('#getAll', () => {
 

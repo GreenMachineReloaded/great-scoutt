@@ -39,3 +39,34 @@ export function stubWriteToFile () {
 export function unStubWriteToFile () {
   FileSystem.writeToFile.restore();
 }
+
+let teamCounter = 0;
+
+export function createTeam (number) {
+  return {
+    id: Date.now(),
+    name: `Team ${teamCounter++}`,
+    number: number || `${Math.round(Math.random() * 20000)}`
+  };
+}
+
+/**
+ * Extension to Promise library that resolves promises in order. Does not pass thru result values!
+ * @param {array} promises an array of promises
+ * @param {array} results resolved values of promises
+ */
+Promise.seq = function (promises, results=[]) {
+  if (promises.length === 0) {
+    return Promise.resolve(results);
+  }
+
+  return promises[0]().then((value) => {
+    const nextResults = results;
+    nextResults.push(value);
+    return Promise.seq(promises.slice(1), nextResults);
+  });
+};
+
+Promise.make = function (cb) {
+  return () => new Promise(cb);
+};

@@ -1,5 +1,7 @@
 import Collection from './collection';
 
+const gameConfig = require('../data/game-config');
+
 let instance;
 
 /**
@@ -11,13 +13,12 @@ function Client () {
   if (!instance) {
     const newMatchCollection = new Collection('matches.json', []);
     const newTeamCollection = new Collection('teams.json', []);
-    const matchCollection = setupMatchCollection(newMatchCollection, newTeamCollection);
     const tournamentCollection = new Collection('tournaments.json', require('../data/tournaments'));
     const settingsCollection = new Collection('settings.json', require('../data/settings'));
 
     instance = {
-      matchCollection: matchCollection,
-      teamCollection: setupTeamCollection(newTeamCollection, matchCollection),
+      matchCollection: setupMatchCollection(newMatchCollection, newTeamCollection, tournamentCollection),
+      teamCollection: setupTeamCollection(newTeamCollection, newMatchCollection),
       tournamentCollection: tournamentCollection,
       settingsCollection: settingsCollection
     };
@@ -62,12 +63,58 @@ function setupTeamCollection (collection, matchCollection) {
   };
 }
 
-function setupMatchCollection (collection, teamCollection) {
+function setupMatchCollection (collection, teamCollection, tournamentCollection) {
+  function format (match) {
+    return Promise.all([
+      tournamentCollection.getById(match.tournament),
+      teamCollection.filter({ number: match.team }).then(([team]) => team)
+    ])
+    .then(([tournament, team]) => {
+      return {
+        id: match.id,
+        team: team,
+        tournament: tournament || { id: -1, name: 'Unknown' },
+        number: match.number,
+  
+        // TODO: rename to code
+        matchId: match.matchId,
+        alliance: match.alliance,
+        comments: match.comments,
+        data: {
+          categories: match.data.categories.map((category) => {
+  
+            // get category with rule metadata from configuration
+            const categoryMetadata = gameConfig.categories.find((cat) => cat.name === category.name);
+  
+            // merge points for current match with rule metadata
+            category.rules = category.rules.map((rule, i) => {
+              const ruleMetadata = categoryMetadata.rules.find((ruleMData) => ruleMData.name === rule.name);
+              return Object.assign(rule, ruleMetadata);
+            });
+  
+            return category;
+          })
+        }
+      };
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
   return {
-    getAll: collection.getAll.bind(collection),
+    getAll: (() => {
+      return collection.getAll().then((matches) => Promise.all(matches.map(format)));
+    }).bind(collection),
+
     getById: collection.getById.bind(collection),
     find: collection.find.bind(collection),
-    filter: collection.filter.bind(collection),
+
+    filter: ((params) => {
+      return collection.filter(params).then((matches) => {
+        return Promise.all(matches.map(format));
+      })
+    }).bind(collection),
 
     add: ((match) => {
       if (match.number < 1) {
@@ -83,7 +130,8 @@ function setupMatchCollection (collection, teamCollection) {
     update: collection.update.bind(collection),
     remove: collection.remove.bind(collection),
     clear: collection.clear.bind(collection),
-    save: collection.save.bind(collection)
+    save: collection.save.bind(collection),
+    reload: collection.reload.bind(collection)
   };
 }
 
