@@ -3,9 +3,6 @@ import sinon from 'sinon';
 import FileSystem from 'react-native-filesystem-v1';
 import {
   assertProps,
-  stubReadFile,
-  unStubReadFile,
-  stubWriteToFile,
   unStubWriteToFile
 } from '../../utils';
 import SettingsService from './index';
@@ -22,9 +19,28 @@ function createSetting (name, value) {
   };
 }
 
+function resolveAsString (data) {
+  return Promise.resolve(JSON.stringify(data));
+}
+
+function stubDatabases (fakeData) {
+  sinon.stub(FileSystem, 'readFile').callsFake((path) => {
+    switch (path)  {
+      case 'teams.json':
+        return resolveAsString(fakeData.teams || []);
+      case 'matches.json':
+        return resolveAsString(fakeData.matches || []);
+      case 'settings.json':
+        return resolveAsString(fakeData.settings || []);
+      case 'tournaments.json':
+        return resolveAsString(fakeData.tournaments || []);
+    }
+  });
+}
+
 describe('Settings Service', () => {
 
-  beforeAll(() => stubWriteToFile());
+  beforeAll(() => sinon.stub(FileSystem, 'writeToFile').callsFake(() => Promise.resolve({ success: true })));
 
   describe('#getAll', () => {
     const myFirstSetting = createSetting('boring settings option', 0);
@@ -33,7 +49,9 @@ describe('Settings Service', () => {
 
     beforeAll(() => {
       settingsService.settings.reload();
-      stubReadFile([myFirstSetting, mySecondSetting, aFalseySetting]);
+      stubDatabases({
+        settings: [myFirstSetting, mySecondSetting, aFalseySetting]
+      });
     });
 
     it('should return all settings', () => {
@@ -47,7 +65,7 @@ describe('Settings Service', () => {
         });
     });
 
-    afterAll(() => unStubReadFile());
+    afterAll(() => FileSystem.readFile.restore());
 
   });
 
@@ -57,7 +75,9 @@ describe('Settings Service', () => {
 
     beforeAll(() => {
       settingsService.settings.reload();
-      stubReadFile([myFirstSetting, mySecondSetting]);
+      stubDatabases({
+        settings: [myFirstSetting, mySecondSetting]
+      });
     });
 
     it('should update the correct setting', () => {
@@ -71,10 +91,10 @@ describe('Settings Service', () => {
         });
     });
 
-    afterAll(() => unStubReadFile());
+    afterAll(() => FileSystem.readFile.restore());
 
   });
 
-  afterAll(() => unStubWriteToFile());
+  afterAll(() => FileSystem.writeToFile.restore());
 
 });

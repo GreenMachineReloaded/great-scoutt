@@ -3,10 +3,6 @@ import sinon from 'sinon';
 import FileSystem from 'react-native-filesystem-v1';
 import {
   assertProps,
-  stubReadFile,
-  unStubReadFile,
-  stubWriteToFile,
-  unStubWriteToFile,
   createTeam
 } from '../../utils';
 import MatchService from './index';
@@ -17,9 +13,28 @@ const matchService = new MatchService();
 const teamService = new TeamService();
 const tournamentService = new TournamentService();
 
+function resolveAsString (data) {
+  return Promise.resolve(JSON.stringify(data));
+}
+
+function stubDatabases (fakeData) {
+  sinon.stub(FileSystem, 'readFile').callsFake((path) => {
+    switch (path)  {
+      case 'teams.json':
+        return resolveAsString(fakeData.teams || []);
+      case 'matches.json':
+        return resolveAsString(fakeData.matches || []);
+      case 'settings.json':
+        return resolveAsString(fakeData.settings || []);
+      case 'tournaments.json':
+        return resolveAsString(fakeData.tournaments || []);
+    }
+  });
+}
+
 describe('Match Service', () => {
 
-  beforeAll(() => stubWriteToFile());
+  beforeAll(() => sinon.stub(FileSystem, 'writeToFile').callsFake(() => Promise.resolve({ success: true })));
 
   describe('#get', () => {
     const match1 = matchService.getEmptyMatch('4318');
@@ -27,47 +42,19 @@ describe('Match Service', () => {
     match2.tournament = 1;
 
     beforeAll(() => {
-      return Promise.seq([
-
-        // set up matches
-        Promise.make((done) => {
-          matchService.matches.reload();
-          stubReadFile([
-            match2,
-            matchService.getEmptyMatch(),
-            match1,
-            matchService.getEmptyMatch()
-          ]);
-          return matchService.getAll()
-            .then((matches) => {
-              unStubReadFile();
-              done(matches);
-            });
-        }),
-
-        // set up teams
-        Promise.make((done) => {
-          teamService.teams.reload();
-          stubReadFile([createTeam('4318')]);
-          return teamService.getAll()
-            .then((teams) => {
-              unStubReadFile();
-              done(teams);
-            });
-        }),
-
-        // set up tournaments
-        Promise.make((done) => {
-          tournamentService.tournaments.reload();
-          stubReadFile([{ id: 0, name: 'WVA States' }, { id: 1, name: 'Anne Arundel' }]);
-          return tournamentService.getAll()
-            .then((tournaments) => {
-              unStubReadFile();
-              done(tournaments);
-            });
-        })
-
-      ]);
+      matchService.matches.reload();
+      tournamentService.tournaments.reload();
+      teamService.teams.reload();
+      stubDatabases({
+        matches: [
+          match2,
+          matchService.getEmptyMatch(),
+          match1,
+          matchService.getEmptyMatch()
+        ],
+        teams: [createTeam('4318')],
+        tournaments: [{ id: 0, name: 'WVA States' }, { id: 1, name: 'Anne Arundel' }]
+      });
     });
 
     // FIXME: does not validate match number sort order
@@ -86,7 +73,7 @@ describe('Match Service', () => {
       matchService.matches.clear();
       teamService.teams.clear();
       tournamentService.tournaments.clear();
-      unStubReadFile();
+      FileSystem.readFile.restore();
     });
 
   });
@@ -96,6 +83,7 @@ describe('Match Service', () => {
     let id = null;
 
     beforeAll(() => {
+      stubDatabases();
       return matchService.create(newMatch)
         .then((created) => {
           id = created.id;
@@ -114,10 +102,11 @@ describe('Match Service', () => {
 
     afterAll(() => {
       matchService.matches.clear();
+      FileSystem.readFile.restore();
     });
 
   });
 
-  afterAll(() => unStubWriteToFile());
+  afterAll(() => FileSystem.writeToFile.restore());
 
 });

@@ -19,7 +19,6 @@ TeamService.prototype.getByNumber = function (number) {
 
 TeamService.prototype.get = function (params) {
   return this.teams.filter(params);
-    //.then((teams) => Promise.all(teams.map(format)));
 };
 
 TeamService.prototype.create = function (team) {

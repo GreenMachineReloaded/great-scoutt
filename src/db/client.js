@@ -34,9 +34,34 @@ function Client () {
 // TODO: bind setupMethod this to collection and change these override methods to arrow funcs?
 function setupTeamCollection (collection, matchCollection) {
   return {
-    getAll: collection.getAll.bind(collection),
+
+    getAll: (() => {
+      return Promise.all([
+        collection.getAll(),
+        matchCollection.getAll()
+      ])
+      .then(([teams, matches]) => {
+        return teams.map((team) => {
+          const teamWithMatches = team;
+          teamWithMatches.matches = matches.filter((m) => m.team === team.number);
+          return teamWithMatches;
+        });
+      });
+    }).bind(collection),
+
     getById: collection.getById.bind(collection),
-    find: collection.find.bind(collection),
+
+    find: ((findMethod) => {
+      return collection.find(findMethod)
+        .then((team) => {
+          const teamWithMatches = Object.assign({ matches: [] }, team);
+          return team ?
+            matchCollection.filter((m) => m.team === teamWithMatches.number)
+              .then((matches) => Object.assign({ matches }, teamWithMatches))
+            : Promise.resolve(null);
+        });
+    }).bind(collection),
+
     filter: collection.filter.bind(collection),
     add: collection.add.bind(collection),
     update: collection.update.bind(collection),
@@ -104,7 +129,10 @@ function setupMatchCollection (collection, teamCollection, tournamentCollection)
 
   return {
     getAll: (() => {
-      return collection.getAll().then((matches) => Promise.all(matches.map(format)));
+      return collection.getAll()
+        .then((matches) => {
+          return Promise.all(matches.map(format))
+        });
     }).bind(collection),
 
     getById: collection.getById.bind(collection),

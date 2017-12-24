@@ -2,9 +2,33 @@ import assert from 'assert';
 import sinon from 'sinon';
 import FileSystem from 'react-native-filesystem-v1';
 import TeamService from './index';
-import { assertProps, stubReadFile, unStubReadFile, createTeam } from '../../utils';
+import MatchService from '../match-service';
+import {
+  assertProps,
+  createTeam
+} from '../../utils';
 
 const teamService = new TeamService();
+const matchService = new MatchService();
+
+function resolveAsString (data) {
+  return Promise.resolve(JSON.stringify(data));
+}
+
+function stubDatabases (fakeData) {
+  sinon.stub(FileSystem, 'readFile').callsFake((path) => {
+    switch (path)  {
+      case 'teams.json':
+        return resolveAsString(fakeData.teams || []);
+      case 'matches.json':
+        return resolveAsString(fakeData.matches || []);
+      case 'settings.json':
+        return resolveAsString(fakeData.settings || []);
+      case 'tournaments.json':
+        return resolveAsString(fakeData.tournaments || []);
+    }
+  });
+}
 
 describe('Team Service', () => {
 
@@ -18,7 +42,11 @@ describe('Team Service', () => {
 
       beforeAll(() => {
         teamService.teams.reload(); // forces collection to reload data from disk
-        stubReadFile([]);
+        stubDatabases({
+          teams: [],
+          matches: []
+        });
+        // fsStub.withArgs('teams.json').returns(resolveAsString([]));
       });
 
       it('should respond with an empty array', () => {
@@ -31,22 +59,29 @@ describe('Team Service', () => {
       afterAll(() => {
         FileSystem.readFile.restore();
       });
+
     });
 
     describe('when readFile returns an array with 1 team', () => {
       const team = createTeam();
+      const matches = [Object.assign(matchService.getEmptyMatch(), { team: team.number })];
 
       beforeAll(() => {
         teamService.teams.reload();
-        stubReadFile([team]);
+        matchService.matches.reload();
+        stubDatabases({
+          teams: [team],
+          matches: matches
+        });
       });
 
       it('should return properly formatted teams', () => {
         return teamService.getAll()
           .then((teams) => {
-            assert(teams.length === 1, 'expected an array with 1+ teams...');
+            assert(teams.length === 1, 'expected an array with 1 teams...');
             assertProps(teams[0], {
               ...team, // we expect all the standard team fields, plus some more
+              matches: matches,
               isTop: false,
               averageScores: {
                 autonomous: 0,
@@ -75,17 +110,20 @@ describe('Team Service', () => {
 
     beforeAll(() => {
       teamService.teams.reload();
-      stubReadFile(teams);
+      stubDatabases({
+        teams: teams
+      });
     });
 
     it('should respond with the requested team', () => {
       return teamService.getByNumber(teamToGet.number)
-        .then((team) => {;
+        .then((team) => {
           assert(team.number === teamToGet.number, `expected team ${teamToGet.number} got ${team.number}`);
+          assertProps(team, Object.assign({ matches: [] }, teamToGet));
         });
     });
 
-    afterAll(() => unStubReadFile());
+    afterAll(() => FileSystem.readFile.restore());
 
   });
 
@@ -99,7 +137,9 @@ describe('Team Service', () => {
 
     beforeAll(() => {
       teamService.teams.reload();
-      stubReadFile(teams);
+      stubDatabases({
+        teams: teams
+      });
     });
   
     it('should return matching teams', () => {
@@ -107,7 +147,7 @@ describe('Team Service', () => {
         .then(([firstResult]) => assertProps(firstResult, teamToGet));
     });
   
-    afterAll(() => unStubReadFile());
+    afterAll(() => FileSystem.readFile.restore());
 
   });
 
@@ -118,20 +158,22 @@ describe('Team Service', () => {
 
       beforeAll(() => {
         teamService.teams.reload();
-        stubReadFile([]);
+        matchService.matches.reload();
+        stubDatabases({
+          teams: [],
+          matches: []
+        });
       });
   
       it('should create a new team', () => {
         return teamService.create(newTeam)
           .then((created) => {
             assertProps(created, newTeam);
-            return teamService.getAll();
           })
-          .then(([created]) => assert(created.id === newTeam.id))
-          .catch((err) => assert.fail(err));
+          .catch((err) => assert.fail(err.message));
       });
 
-      afterAll(() => unStubReadFile());
+      afterAll(() => FileSystem.readFile.restore());
 
     });
 
@@ -144,7 +186,9 @@ describe('Team Service', () => {
 
       beforeAll(() => {
         teamService.teams.reload();
-        stubReadFile(teams);
+        stubDatabases({
+          teams: teams
+        })
       });
       
       it('should not create a new team', () => {
@@ -153,7 +197,7 @@ describe('Team Service', () => {
           .catch((err) => assert(err.name === 'DbAddOpError', `${err.message}`));
       });
 
-      afterAll(() => unStubReadFile());
+      afterAll(() => FileSystem.readFile.restore());
 
     });
 
@@ -164,7 +208,9 @@ describe('Team Service', () => {
 
     beforeAll(() => {
       teamService.teams.reload();
-      stubReadFile([teamToUpdate, createTeam()]);
+      stubDatabases({
+        teams: [teamToUpdate, createTeam()]
+      });
     });
 
     it('should update the requested team', () => {
@@ -173,7 +219,7 @@ describe('Team Service', () => {
         .catch((err) => assert.fail(err.message));
     });
 
-    afterAll(() => unStubReadFile());
+    afterAll(() => FileSystem.readFile.restore());
 
   });
 
@@ -182,7 +228,9 @@ describe('Team Service', () => {
 
     beforeAll(() => {
       teamService.teams.reload();
-      stubReadFile([teamToDelete]);
+      stubDatabases({
+        teams: [teamToDelete]
+      });
     });
 
     it('should delete the requested team', () => {
@@ -191,7 +239,7 @@ describe('Team Service', () => {
         .then((data) => assert(data.length === 0));
     });
 
-    afterAll(() => unStubReadFile());
+    afterAll(() => FileSystem.readFile.restore());
 
   });
 
