@@ -48,6 +48,8 @@ export default class TeamAdd extends Component {
             .catch((error) => {
               if (error.name === 'DbAddOpError') {
                 Alert.alert('Error Adding Team', error.message);
+              } else {
+                Alert.alert('Unknown Error Occurred', error);
               }
             });
         }}/>

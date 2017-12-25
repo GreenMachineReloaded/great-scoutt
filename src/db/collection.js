@@ -51,9 +51,11 @@ Collection.prototype.getData = function () {
         return this.data;
       })
       .catch((error) => {
-        console.log('FileError!', error.message, 'creating file...');
         this.data = this.initData;
-        return this.save().then(() => Promise.resolve(this.data));
+        return this.save().then(() => {
+          loading[this.path] = false;
+          return Promise.resolve(this.data);
+        });
       });
   }
 
