@@ -223,7 +223,7 @@ describe('Team Service', () => {
 
   });
 
-  describe('#delete', () => {
+  describe.only('#delete', () => {
     const teamToDelete = createTeam();
 
     beforeAll(() => {
@@ -234,9 +234,13 @@ describe('Team Service', () => {
     });
 
     it('should delete the requested team', () => {
-      return teamService.delete(teamToDelete.number)
-        .then(() => teamService.getAll())
-        .then((data) => assert(data.length === 0));
+      return Promise.seq([
+        Promise.make((done) => teamService.delete(teamToDelete.number).then(done)),
+        Promise.make((done) => teamService.getAll().then(done))
+      ])
+      .then(([deleteResult, data]) => {
+        assert(data.length === 0, `expected data to have 0 elements, has ${data.length}`)
+      });
     });
 
     afterAll(() => FileSystem.readFile.restore());

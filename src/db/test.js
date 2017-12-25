@@ -9,7 +9,7 @@ describe('Collection', () => {
   beforeAll(() => sinon.stub(FileSystem, 'writeToFile').callsFake(() => Promise.resolve({ success: true })))
 
   describe('init', () => {
-    const collection = new Collection('test.json', ['sometestdata']);
+    const collection = Collection('test.json', ['sometestdata']);
 
     beforeAll(() => sinon.stub(FileSystem, 'readFile').callsFake(() => Promise.resolve('[]')));
 
@@ -25,10 +25,10 @@ describe('Collection', () => {
 
   });
 
-  describe('add', () => {
+  describe('#add', () => {
     
     describe('when there are no items in collection', () => {
-      const collection = new Collection('test.json', []);
+      const collection = Collection('test.json', []);
     
       beforeAll(() => sinon.stub(FileSystem, 'readFile').callsFake(() => Promise.resolve('[]')));
   
@@ -39,7 +39,7 @@ describe('Collection', () => {
         ])
         .then(([addResult, items]) => {
           assert(addResult === 'new item', 'expected result of collection.add to be the added item');
-          assert(items.length === 1, 'expected database to have only 1 item');
+          assert(items.length === 1,`expected database to have only 1 item, but it has ${items.length}`);
           assert(items[0] === 'new item', 'expected first item in database to be "new item');
         })
         .catch(assert.fail);
