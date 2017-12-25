@@ -7,6 +7,7 @@ import MatchEdit from './match/edit';
 import MatchAdd from './match/add';
 import MatchDetail from './match/detail';
 import SettingsList from './settings/list';
+import Transfer from './transfer';
 
 export default StackNavigator({
   TeamListScreen: {
@@ -32,5 +33,8 @@ export default StackNavigator({
   },
   SettingsListScreen: {
     screen: SettingsList
+  },
+  TransferScreen: {
+    screen: Transfer
   }
 });
