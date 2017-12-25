@@ -4,8 +4,8 @@ import FileSystem from 'react-native-filesystem-v1';
 import {
   assertProps,
   unStubWriteToFile
-} from '../../utils';
-import SettingsService from './index';
+} from '../../src/utils';
+import SettingsService from '../../src/services/settings-service';
 
 const settingsService = new SettingsService();
 

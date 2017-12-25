@@ -1,8 +1,8 @@
 import assert from 'assert';
 import sinon from 'sinon';
 import FileSystem from 'react-native-filesystem-v1';
-import Collection from './collection';
-import utils from '../utils';
+import Collection from '../../src/db/collection';
+import utils from '../../src/utils';
 
 describe('Collection', () => {
 

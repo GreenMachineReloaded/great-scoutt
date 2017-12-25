@@ -4,10 +4,10 @@ import FileSystem from 'react-native-filesystem-v1';
 import {
   assertProps,
   createTeam
-} from '../../utils';
-import MatchService from './index';
-import TeamService from '../team-service';
-import TournamentService from '../tournament-service';
+} from '../../src/utils';
+import MatchService from '../../src/services/match-service';
+import TeamService from '../../src/services/team-service';
+import TournamentService from '../../src/services/tournament-service';
 
 const matchService = new MatchService();
 const teamService = new TeamService();

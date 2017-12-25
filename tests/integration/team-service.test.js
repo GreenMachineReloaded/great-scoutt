@@ -1,12 +1,12 @@
 import assert from 'assert';
 import sinon from 'sinon';
 import FileSystem from 'react-native-filesystem-v1';
-import TeamService from './index';
-import MatchService from '../match-service';
+import TeamService from '../../src/services/team-service';
+import MatchService from '../../src/services/match-service';
 import {
   assertProps,
   createTeam
-} from '../../utils';
+} from '../../src/utils';
 
 const teamService = new TeamService();
 const matchService = new MatchService();
@@ -223,7 +223,7 @@ describe('Team Service', () => {
 
   });
 
-  describe.only('#delete', () => {
+  describe('#delete', () => {
     const teamToDelete = createTeam();
 
     beforeAll(() => {
