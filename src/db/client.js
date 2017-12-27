@@ -11,10 +11,10 @@ let instance;
  */
 function Client () {
   if (!instance) {
-    const newMatchCollection = Collection('matches.json', []);
-    const newTeamCollection = Collection('teams.json', []);
-    const tournamentCollection = Collection('tournaments.json', require('../data/tournaments'));
-    const settingsCollection = Collection('settings.json', require('../data/settings'));
+    const newMatchCollection = new Collection('matches.json', []);
+    const newTeamCollection = new Collection('teams.json', []);
+    const tournamentCollection = new Collection('tournaments.json', require('../data/tournaments'));
+    const settingsCollection = new Collection('settings.json', require('../data/settings'));
 
     instance = {
       matchCollection: setupMatchCollection(newMatchCollection, newTeamCollection, tournamentCollection),

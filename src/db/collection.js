@@ -7,7 +7,7 @@ let loading = {};
  * @param  {string} path     path to data file
  * @param  {array}  initData array of objects to initialize with (if null will load current db from path)
  */
-function Collection (path='', initData=[], autoSave=false) {
+export default function Collection (path='', initData=[], autoSave=false) {
   if (!path.length) {
     throw new Error('Please provide a path for the database...');
   }
@@ -16,13 +16,13 @@ function Collection (path='', initData=[], autoSave=false) {
     data: null
   };
 
-  function getData () {
+  this.getData = () => {
     
     // check if this file path is currently being loaded
     if (loading[path]) {
       
       // if so, wait 20 ms and try getting it again
-      return new Promise((done) => setTimeout(() => getData().then(done), 10));
+      return new Promise((done) => setTimeout(() => this.getData().then(done), 10));
     }
   
     // if our data object is not initialized, do so
@@ -36,40 +36,40 @@ function Collection (path='', initData=[], autoSave=false) {
             loading[path] = false;
   
             // if there is no data on disk, we need to save our preset data
-            if (!self.data) {
-              save();
+            if (!d.length) {
+              this.save();
             }
           } catch (e) {
             throw new Error('failed parsing json file: ' + path)
           }
-  
+
           return self.data;
         })
         .catch((error) => {
           self.data = initData;
-          return save().then(() => {
+          return this.save().then(() => {
             loading[path] = false;
             return Promise.resolve(self.data);
           });
         });
     }
-  
+
     return Promise.resolve(self.data);
   }
 
-  function getAll () {
-    return getData();
+  this.getAll = () => {
+    return this.getData();
   }
 
-  function getById (id) {
-    return getData().then((data) => data.find((item) => item.id === id))
+  this.getById = (id) => {
+    return this.getData().then((data) => data.find((item) => item.id === id))
   }
 
-  function find (searchFunc) {
-    return getData().then((data) => data.find(searchFunc))
+  this.find = (searchFunc) => {
+    return this.getData().then((data) => data.find(searchFunc))
   }
 
-  function filter (params) {
+  this.filter = (params) => {
 
     // check if b hasValues of a
     function hasValues (a, b) {
@@ -84,32 +84,32 @@ function Collection (path='', initData=[], autoSave=false) {
       return isResult;
     }
 
-    return getData()
+    return this.getData()
       .then((data) => data.filter((item) => hasValues(params, item)));
 
   }
 
-  function add (item) {
+  this.add = (item) => {
     // TODO: make a better id generator
     const itemWithId = item;
     itemWithId.id = Date.now();
-    return getData()
+    return this.getData()
       .then((data) => {
         self.data = data.concat(itemWithId);
-        return save();
+        return this.save();
       })
       .then(() => itemWithId);
   }
 
   // updates the item with the provided id to have the fields with values in
   // modifiedFields. if an id field is included it will be deleted
-  function update (id, modifiedFields) {
+  this.update = (id, modifiedFields) => {
     // modifiying the argument because I REALLY don't want you to put an id on this
     if (modifiedFields.id !== undefined) {
       delete modifiedFields.id;
     }
 
-    return getData()
+    return this.getData()
       .then((data) => {
         const currentItemIndex = data.findIndex((item) => item.id === id);
         if (currentItemIndex < 0) {
@@ -122,24 +122,24 @@ function Collection (path='', initData=[], autoSave=false) {
         const mergedItem = Object.assign(currentItem, modifiedFields);
         data[currentItemIndex] = mergedItem;
         self.data = data;
-        return save();
+        return this.save();
       });
   }
 
-  function remove (id) {
-    return getData()
+  this.remove = (id) => {
+    return this.getData()
       .then((data) => {
         self.data = data.filter((item) => item.id !== id);
-        return save();
+        return this.save();
       });
   }
 
-  function clear (id) {
+  this.clear = (id) => {
     self.data = [];
-    return save();
+    return this.save();
   }
 
-  function save () {
+  this.save = () => {
     
     // if there is no data currently loaded, initialize it to an empty array and
     // write that out
@@ -152,23 +152,19 @@ function Collection (path='', initData=[], autoSave=false) {
     return FileSystem.writeToFile(path, JSON.stringify(dataToWrite), false, FileSystem.storage.extBackedUp);
   }
 
-  function reload () {
+  this.reload = () => {
     self.data = null;
   }
 
-  return {
-    getData,
-    getAll,
-    getById,
-    find,
-    filter,
-    add,
-    update,
-    remove,
-    clear,
-    save,
-    reload
-  };
-};
+  this.exportCSV = (Model) => {
+    return this.getData()
+      .then((data) => {
+        const headerModel = new Model(data[0]);
+        return [headerModel.getCSVHeaders(), data.map((el) => {
+          const model = new Model(el);
+          return model.toCSV();
+        }).join('\n')].join('\n');
+      });
+  }
 
-export default Collection;
+};

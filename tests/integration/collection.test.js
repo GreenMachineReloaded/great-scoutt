@@ -1,15 +1,20 @@
 import assert from 'assert';
 import sinon from 'sinon';
+import fs from 'fs';
+import path from 'path';
 import FileSystem from 'react-native-filesystem-v1';
 import Collection from '../../src/db/collection';
+import Match from '../../src/db/models/match';
 import utils from '../../src/utils';
+
+const testMatches = require('./data/export-csv/matches.json');
 
 describe('Collection', () => {
 
   beforeAll(() => sinon.stub(FileSystem, 'writeToFile').callsFake(() => Promise.resolve({ success: true })))
 
   describe('init', () => {
-    const collection = Collection('test.json', ['sometestdata']);
+    const collection = new Collection('test.json', ['sometestdata']);
 
     beforeAll(() => sinon.stub(FileSystem, 'readFile').callsFake(() => Promise.resolve('[]')));
 
@@ -17,7 +22,7 @@ describe('Collection', () => {
       return collection.getAll()
         .then((data) => {
           assert(data.length === 1);
-          assert(data[0] === 'sometestdata');
+          assert(data[0] === 'sometestdata', `expected first element to be "sometestdata", but was actually ${data[0]}`);
         });
     });
 
@@ -28,7 +33,7 @@ describe('Collection', () => {
   describe('#add', () => {
     
     describe('when there are no items in collection', () => {
-      const collection = Collection('test.json', []);
+      const collection = new Collection('test.json', []);
     
       beforeAll(() => sinon.stub(FileSystem, 'readFile').callsFake(() => Promise.resolve('[]')));
   
@@ -47,6 +52,22 @@ describe('Collection', () => {
   
       afterAll(() => FileSystem.readFile.restore());
 
+    });
+
+  });
+
+  describe('#exportCSV', () => {
+    const collection = new Collection('test.json', []);
+    let expectedCSV = '';
+
+    beforeAll(() => {
+      sinon.stub(FileSystem, 'readFile').callsFake(() => Promise.resolve(JSON.stringify(testMatches)));
+      expectedCSV = fs.readFileSync(path.join(__dirname, 'data/export-csv/matches.csv'));
+    });
+
+    it('should correctly export data', () => {
+      return collection.exportCSV(Match)
+        .then((csv) => assert.equal(csv, expectedCSV));
     });
 
   });

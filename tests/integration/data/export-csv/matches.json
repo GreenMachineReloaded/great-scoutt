@@ -1,0 +1,214 @@
+[
+    {
+        "team": "6987",
+        "tournament": 0,
+        "number": 1,
+        "matchId": "0-1",
+        "alliance": "RED",
+        "comments": "what AnaMaZiNg WABAT!!!!",
+        "data": {
+            "categories": [
+                {
+                    "name": "Autonomous",
+                    "rules": [
+                        {
+                            "name": "Alliance-specific Jewel remaining on platform",
+                            "type": "boolean",
+                            "value": 30,
+                            "points": 30
+                        },
+                        {
+                            "name": "Glyph scored in Cryptobox",
+                            "type": "number",
+                            "increment": 15,
+                            "points": 15
+                        },
+                        {
+                            "name": "Glyph bonus for Cryptobox Key column",
+                            "type": "boolean",
+                            "value": 30,
+                            "points": 0
+                        },
+                        {
+                            "name": "Robot parked in Safe Zone",
+                            "type": "boolean",
+                            "value": 10,
+                            "points": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "TeleOp",
+                    "rules": [
+                        {
+                            "name": "Glyph scored in Cryptobox",
+                            "type": "number",
+                            "increment": 2,
+                            "points": 16
+                        },
+                        {
+                            "name": "Completed row of 3 in Cryptobox",
+                            "type": "number",
+                            "increment": 10,
+                            "points": 0
+                        },
+                        {
+                            "name": "Completed column of 4 in Cryptobox",
+                            "type": "number",
+                            "increment": 20,
+                            "points": 80
+                        },
+                        {
+                            "name": "Completed Cipher",
+                            "type": "number",
+                            "increment": 30,
+                            "points": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "End Game",
+                    "rules": [
+                        {
+                            "name": "Relic in Recovery Zone #1",
+                            "type": "boolean",
+                            "value": 10,
+                            "points": 0
+                        },
+                        {
+                            "name": "Relic in Recovery Zone #2",
+                            "type": "boolean",
+                            "value": 20,
+                            "points": 0
+                        },
+                        {
+                            "name": "Relic in Recovery Zone #3",
+                            "type": "boolean",
+                            "value": 40,
+                            "points": 0
+                        },
+                        {
+                            "name": "Bonus for keeping Relic upright",
+                            "type": "boolean",
+                            "value": 15,
+                            "points": 0
+                        },
+                        {
+                            "name": "Robot balanced on Balancing Stone",
+                            "type": "boolean",
+                            "value": 20,
+                            "points": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        "id": 1512316411346
+    },
+    {
+        "team": "5678",
+        "tournament": 0,
+        "number": 1,
+        "matchId": "0-3",
+        "alliance": "BLUE",
+        "comments": "!@#$%^&*(jhgfdcfvgbhjnklhgb                ",
+        "data": {
+            "categories": [
+                {
+                    "name": "Autonomous",
+                    "rules": [
+                        {
+                            "name": "Alliance-specific Jewel remaining on platform",
+                            "type": "boolean",
+                            "value": 30,
+                            "points": 0
+                        },
+                        {
+                            "name": "Glyph scored in Cryptobox",
+                            "type": "number",
+                            "increment": 15,
+                            "points": 15
+                        },
+                        {
+                            "name": "Glyph bonus for Cryptobox Key column",
+                            "type": "boolean",
+                            "value": 30,
+                            "points": 30
+                        },
+                        {
+                            "name": "Robot parked in Safe Zone",
+                            "type": "boolean",
+                            "value": 10,
+                            "points": 10
+                        }
+                    ]
+                },
+                {
+                    "name": "TeleOp",
+                    "rules": [
+                        {
+                            "name": "Glyph scored in Cryptobox",
+                            "type": "number",
+                            "increment": 2,
+                            "points": 16
+                        },
+                        {
+                            "name": "Completed row of 3 in Cryptobox",
+                            "type": "number",
+                            "increment": 10,
+                            "points": 20
+                        },
+                        {
+                            "name": "Completed column of 4 in Cryptobox",
+                            "type": "number",
+                            "increment": 20,
+                            "points": 80
+                        },
+                        {
+                            "name": "Completed Cipher",
+                            "type": "number",
+                            "increment": 30,
+                            "points": 0
+                        }
+                    ]
+                },
+                {
+                    "name": "End Game",
+                    "rules": [
+                        {
+                            "name": "Relic in Recovery Zone #1",
+                            "type": "boolean",
+                            "value": 10,
+                            "points": 0
+                        },
+                        {
+                            "name": "Relic in Recovery Zone #2",
+                            "type": "boolean",
+                            "value": 20,
+                            "points": 0
+                        },
+                        {
+                            "name": "Relic in Recovery Zone #3",
+                            "type": "boolean",
+                            "value": 40,
+                            "points": 40
+                        },
+                        {
+                            "name": "Bonus for keeping Relic upright",
+                            "type": "boolean",
+                            "value": 15,
+                            "points": 0
+                        },
+                        {
+                            "name": "Robot balanced on Balancing Stone",
+                            "type": "boolean",
+                            "value": 20,
+                            "points": 20
+                        }
+                    ]
+                }
+            ]
+        },
+        "id": 1512341441256
+    }
+]
