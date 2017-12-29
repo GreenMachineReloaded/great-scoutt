@@ -4,29 +4,27 @@ const gameConfig = require('../../data/game-config');
 export default function Match (m) {
   GenericModel.call(this);
 
-  const self = {
+  this.data = {
+    team: typeof m.team === 'object' ? m.team.number : m.team,
+    tournament: typeof m.tournament === 'object' ? m.tournament.id : m.tournament,
+    number: m.number,
+    matchId: m.matchId,
+    alliance: m.alliance,
+    comments: m.comments,
     data: {
-      team: m.team,
-      tournament: m.tournament,
-      number: m.number,
-      matchId: m.matchId,
-      alliance: m.alliance,
-      comments: m.comments,
-      data: {
-        categories: gameConfig.categories.map((category) => {
+      categories: gameConfig.categories.map((category) => {
 
-          const matchCategory = m.data.categories.find((cat) => cat.name === category.name);
+        const matchCategory = m.data.categories.find((cat) => cat.name === category.name);
 
-          // merge points for current match with rule metadata
-          category.rules = category.rules.map((rule, i) => {
-            const matchRule = matchCategory.rules.find((ruleMData) => ruleMData.name === rule.name);
-            rule.points = matchRule.points || 0;
-            return rule;
-          });
+        // merge points for current match with rule metadata
+        category.rules = category.rules.map((rule, i) => {
+          const matchRule = matchCategory.rules.find((ruleMData) => ruleMData.name === rule.name);
+          rule.points = matchRule.points || 0;
+          return rule;
+        });
 
-          return category;
-        })
-      }
+        return category;
+      })
     }
   };
 
@@ -45,7 +43,7 @@ export default function Match (m) {
       });
     }
 
-    return getHeaders(self.data).join(',');
+    return getHeaders(this.data).join(',');
   };
 
   this.toCSV = () => {
@@ -65,6 +63,6 @@ export default function Match (m) {
       });
     }
 
-    return getData(self.data).join(',');
+    return getData(this.data).join(',');
   };
 }

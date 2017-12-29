@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
-import { View, Text, Alert } from 'react-native';
-import Camera from 'react-native-camera';
+import { View, Text, Alert, Button } from 'react-native';
+import { Receive, Send } from './components';
 
 export default class Transfer extends Component {
 
+  constructor (props) {
+    super(props);
+    this.state = {
+      isSending: true
+    };
+  }
+
   render () {
+    const ModeView = this.state.isSending ? Send : Receive;
     return (
       <View>
-        <Text>{'Transfer screen'}</Text>
-        <Camera
-          style={{ width: 250, height: 250 }}
-          onBarCodeRead={this.onBarCodeRead.bind(this)}
-          aspect={Camera.constants.Aspect.fill}
-        />
+        <View style={{ flexDirection: 'row' }}>
+          <Button title="Send" onPress={() => this.setState({ isSending: true })}/>
+          <Button title="Receive" onPress={() => this.setState({ isSending: false })}/>
+        </View>
+        <ModeView/>
       </View>
     );
   }
