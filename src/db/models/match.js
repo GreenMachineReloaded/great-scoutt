@@ -42,7 +42,7 @@ function Match (m, config=gameConfig) {
           ).join(csvDelimiter);
           return t;
         } else if (key === 'comments') {
-          return `"${value}"`;
+          return value;
         } else {
           return value;
         }
@@ -70,8 +70,8 @@ Match.getCSVHeaders = () => {
       const childKey = Object.keys(match[key]);
       if (key === 'data') {
         return match.data.categories.map((cat) =>
-          cat.rules.map((rule) => `"${rule.name}"`)
-        );
+          cat.rules.map((rule) => rule.name).join(csvDelimiter)
+        ).join(csvDelimiter);
       } else {
         return key;
       }

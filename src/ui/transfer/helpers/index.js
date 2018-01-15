@@ -9,7 +9,7 @@ export function genQRCode (csvMatchString, QRCode) {
 export function createTeam (fields) {
   return {
     id: Number(fields[0]),
-    name: fields[1].slice(0, fields[1].length),
+    name: fields[1],
     number: fields[2]
   };
 }
