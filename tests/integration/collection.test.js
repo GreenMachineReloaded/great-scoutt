@@ -62,12 +62,18 @@ describe('Collection', () => {
 
     beforeAll(() => {
       sinon.stub(FileSystem, 'readFile').callsFake(() => Promise.resolve(JSON.stringify(testMatches)));
-      expectedCSV = fs.readFileSync(path.join(__dirname, 'data/export-csv/matches.csv'));
+      expectedCSV = fs.readFileSync(path.join(__dirname, 'data/export-csv/matches.csv')).toString();
     });
 
     it('should correctly export data', () => {
       return collection.exportCSV(Match)
-        .then((csv) => assert.equal(csv, expectedCSV));
+        .then((csv) => {
+          const results = csv.split('\n');
+          const expectedResults = expectedCSV.split('\n');
+          expectedResults.forEach((expected, i) => {
+            assert.equal(results[i], expected);
+          });
+        });
     });
 
   });

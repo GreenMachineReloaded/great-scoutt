@@ -62,11 +62,11 @@ export default function Collection (path='', initData=[], autoSave=false) {
   }
 
   this.getById = (id) => {
-    return this.getData().then((data) => data.find((item) => item.id === id))
+    return this.getData().then((data) => data.find((item) => item.id === id));
   }
 
   this.find = (searchFunc) => {
-    return this.getData().then((data) => data.find(searchFunc))
+    return this.getData().then((data) => data.find(searchFunc));
   }
 
   this.filter = (params) => {
@@ -85,8 +85,7 @@ export default function Collection (path='', initData=[], autoSave=false) {
     }
 
     return this.getData()
-      .then((data) => data.filter((item) => hasValues(params, item)));
-
+      .then((data) => data.filter((item) => hasValues(params, item)));d
   }
 
   this.add = (item) => {
@@ -159,11 +158,9 @@ export default function Collection (path='', initData=[], autoSave=false) {
   this.exportCSV = (Model) => {
     return this.getData()
       .then((data) => {
-        const headerModel = new Model(data[0]);
-        return [headerModel.getCSVHeaders(), data.map((el) => {
-          const model = new Model(el);
-          return model.toCSV();
-        }).join('\n')].join('\n');
+        const models = data.map(el => new Model(el));
+        const rows = models.map(m => m.toCSV());
+        return [Model.getCSVHeaders()].concat(rows).join('\n');
       });
   }
 

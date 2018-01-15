@@ -111,7 +111,6 @@ export default class TeamList extends Component {
     headerStyle: globalStyle.headerStyle,
     headerRight: (
       <View style={{ flexDirection: "row" }}>
-        <Button title="Transfer" onPress={() => navigation.navigate('TransferScreen')}/>
         <TouchableHighlight style={{ width: 46 }} onPress={() => navigation.navigate('SettingsListScreen')}>
           <Text style={{ fontSize: 28 }}>{'🔧'}</Text>
         </TouchableHighlight>
@@ -148,6 +147,8 @@ export default class TeamList extends Component {
     return (
       <View>
         <View>
+        <Button title="Transfer" onPress={() =>
+            this.props.navigation.navigate('TransferScreen', { refresh: this.refresh.bind(this) })}/>
           <Button title="Add Team" onPress={() =>
             this.props.navigation.navigate('TeamAddScreen', { refresh: this.refresh.bind(this) })}/>
         </View>
