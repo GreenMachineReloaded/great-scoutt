@@ -3,6 +3,7 @@ import { View, Text, Alert, Dimensions, Vibration } from 'react-native';
 import Camera from 'react-native-camera';
 import MatchService from '../../../services/match-service';
 import TeamService from '../../../services/team-service';
+import { refreshTeamList } from '../../actions';
 import { createTeam, createMatch } from '../helpers';
 
 const matchService = new MatchService();
@@ -59,7 +60,7 @@ export default class Receive extends Component {
     teamService.create(team)
       .then(() => {
         Vibration.vibrate();
-        this.props.navigation.state.params.refresh()
+        refreshTeamList();
       })
       .catch(error => Alert.alert('Error adding team', error.message));
   }
@@ -69,7 +70,7 @@ export default class Receive extends Component {
     matchService.create(match)
       .then(() => {
         Vibration.vibrate();
-        this.props.navigation.state.params.refresh();
+        refreshTeamList();
       })
       .catch(error => Alert.alert('Error adding match', error.message));
   }

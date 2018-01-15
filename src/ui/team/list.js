@@ -13,6 +13,8 @@ import {
 import TeamService from '../../services/team-service';
 import MatchService from '../../services/match-service';
 
+import { initTeamListRefresh, initRefreshTeamList } from '../actions';
+
 import globalStyle from '../global.style.js';
 import style from './list.style';
 
@@ -124,6 +126,9 @@ export default class TeamList extends Component {
     this.state = {
       listSections: []
     };
+
+    // initialize action for refreshing team list
+    initRefreshTeamList(() => this.refresh());
   }
 
   componentWillMount() {
