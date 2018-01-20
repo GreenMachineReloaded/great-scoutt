@@ -74,6 +74,7 @@ export default class TeamDetail extends Component {
     .catch((error) => Alert.alert('Error creating QR code', error.message));
   }
 
+  // TODO: break Modal into seperate component
   render () {
     const team = this.props.navigation.state.params;
     return (
@@ -87,8 +88,9 @@ export default class TeamDetail extends Component {
           <Button title="Close" onPress={() => this.toggleModal()}/>
           <ScrollView>
             <View style={{ height: (this.state.qrCodes.length * SCREEN_WIDTH) + 40 }}>
-            {this.state.qrCodes.map((qrCode) => (
+            {this.state.qrCodes.map((qrCode, i) => (
               <SvgUri
+                key={i}
                 height={SCREEN_WIDTH}
                 width={SCREEN_WIDTH}
                 svgXmlData={qrCode}
