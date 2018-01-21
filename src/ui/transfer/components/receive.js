@@ -15,6 +15,9 @@ const { csvDelimiter } = require('../../../../config');
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default class Receive extends Component {
+  static navigationOptions = () => ({
+    title: 'Scan'
+  });
 
   constructor (props) {
     super(props);
@@ -27,13 +30,17 @@ export default class Receive extends Component {
   render () {
     return (
       <View>
-        <Text>{'Transfer screen'}</Text>
         <Camera
           style={{ width: SCREEN_WIDTH, height: SCREEN_WIDTH }}
           onBarCodeRead={this.onBarCodeRead.bind(this)}
           aspect={Camera.constants.Aspect.fill}
         />
-        <Text>{this.state.teamData}</Text>
+        <Text>{'Teams'}</Text>
+        <Text>{this.state.teamData.map(t => t.split('|')[2])}</Text>
+        <Text>{'Matches'}</Text>
+        {this.state.matchData.map(m => {
+          return (<Text>{`${m.split('|')[3]}`}</Text>);
+        })}
       </View>
     );
   }
