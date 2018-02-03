@@ -1,6 +1,6 @@
 {
-  "name": "GreatScoutt",
-  "version": "0.7.0",
+  "name": "Recon",
+  "version": "0.7.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
